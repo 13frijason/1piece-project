@@ -660,14 +660,15 @@ footer {
 @media (max-width: 768px) {
     .main-nav {
         padding: 1rem 5%;
+        position: relative;
     }
 
     .logo-img {
-        height: 100px;
+        height: 80px;
     }
 
     .logo h1 {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
     }
 
     .nav-links {
@@ -681,6 +682,7 @@ footer {
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         flex-direction: column;
         gap: 0;
+        z-index: 1000;
     }
 
     .nav-links.active {
@@ -698,6 +700,7 @@ footer {
         font-size: 1.1rem;
         border-bottom: 1px solid #f0f0f0;
         text-align: center;
+        width: 100%;
     }
 
     .nav-links a:last-child {
@@ -731,266 +734,273 @@ footer {
         transform: rotate(-45deg) translate(7px, -6px);
     }
 
+    #hero {
+        padding: 6rem 1rem;
+        text-align: center;
+    }
+
+    .hero-content {
+        max-width: 100%;
+        padding: 0 1rem;
+    }
+
     .hero-content h2 {
-        font-size: 2rem;
+        font-size: 1.8rem;
         line-height: 1.3;
+        margin-bottom: 1.5rem;
+        text-align: center;
     }
 
     .hero-content p {
         font-size: 1rem;
+        margin-bottom: 1rem;
+        text-align: center;
     }
 
     .hero-buttons {
         flex-direction: column;
         gap: 1rem;
+        align-items: center;
+        justify-content: center;
     }
 
     .cta-button {
         padding: 1rem 2rem;
         font-size: 1rem;
+        width: 100%;
+        max-width: 300px;
+        text-align: center;
     }
 
-    .contact-methods {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-
-    .features-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-
-    .service-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-
-    .partner-logo {
-        min-width: 150px;
-        padding: 1.5rem;
-        margin: 0 0.5rem;
+    section {
+        padding: 4rem 1rem;
+        text-align: center;
     }
 
     section h2 {
         font-size: 1.8rem;
         margin-bottom: 2rem;
+        text-align: center;
     }
 
-    .construction-info h3 {
-        font-size: 1.5rem;
-    }
-
-    .slide {
-        height: 250px;
-    }
-
-    .slider-container {
-        width: 100%;
-        max-width: 400px;
-    }
-
-    .slide {
-        min-width: 100%;
-        width: 100%;
-    }
-
-    .prev-btn,
-    .next-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-    }
-
-    .slider-controls {
+    .service-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
         padding: 0 1rem;
     }
 
-    .modal-content {
-        width: 95%;
-        margin: 2rem auto;
-        padding: 1.5rem;
+    .service-card {
+        text-align: center;
+        padding: 2rem 1rem;
     }
 
-    .modal-header h2 {
-        font-size: 1.5rem;
+    .service-card h3 {
+        text-align: center;
+        margin-bottom: 1rem;
     }
 
-    .form-group select,
-    .form-group input {
-        font-size: 1rem;
-        padding: 0.8rem;
-    }
-
-    .calculate-button {
-        padding: 1rem 2rem;
-        font-size: 1rem;
+    .service-card p {
+        text-align: center;
     }
 
     .about-content {
         grid-template-columns: 1fr;
         gap: 2rem;
+        text-align: center;
     }
 
     .about-text h3 {
         font-size: 1.8rem;
+        text-align: center;
+        margin-bottom: 1.5rem;
     }
 
     .about-text p {
         font-size: 1rem;
+        text-align: center;
+        line-height: 1.6;
     }
 
     .about-features {
         grid-template-columns: 1fr 1fr;
         gap: 1.5rem;
+        text-align: center;
     }
 
     .about-feature {
         padding: 1rem;
+        text-align: center;
     }
 
     .about-feature i {
         font-size: 2rem;
+        margin-bottom: 1rem;
     }
 
     .about-feature h4 {
         font-size: 1.1rem;
+        text-align: center;
+        margin-bottom: 0.5rem;
     }
 
     .about-feature p {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
+        text-align: center;
     }
 
     .quote-container {
         grid-template-columns: 1fr;
         gap: 2rem;
+        text-align: center;
     }
 
     .quote-content h3 {
         font-size: 1.8rem;
+        text-align: center;
+        margin-bottom: 1.5rem;
     }
 
     .quote-content p {
         font-size: 1rem;
+        text-align: center;
+        line-height: 1.6;
+    }
+
+    .quote-methods {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        text-align: center;
     }
 
     .quote-method {
         padding: 1.5rem;
+        text-align: center;
+    }
+
+    .quote-method i {
+        font-size: 2rem;
+        margin-bottom: 1rem;
     }
 
     .quote-method h4 {
         font-size: 1.1rem;
+        text-align: center;
+        margin-bottom: 0.5rem;
     }
 
     .quote-method p {
         font-size: 1rem;
+        text-align: center;
     }
 
     .quote-form-container {
-        padding: 2rem;
-    }
-
-    .form-row {
-        grid-template-columns: 1fr;
-    }
-
-    .contact-container {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-
-    .contact-info h3 {
-        font-size: 1.8rem;
-    }
-
-    .contact-detail {
-        padding: 1rem;
-    }
-
-    .contact-detail h4 {
-        font-size: 1.1rem;
-    }
-
-    .contact-detail p {
-        font-size: 0.9rem;
-    }
-    .quote-content h3 {
-        font-size: 1.8rem;
-    }
-
-    .quote-content p {
-        font-size: 1rem;
-    }
-
-    .quote-features {
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-    }
-
-    .quote-feature {
-        padding: 0.8rem;
-    }
-
-    .quote-feature i {
-        font-size: 1.2rem;
-    }
-
-    .quote-feature span {
-        font-size: 0.9rem;
-    }
-
-    .quote-board-link p {
-        font-size: 0.9rem;
-    }
-
-    .quote-board-button {
-        padding: 0.7rem 1.2rem;
-        font-size: 0.9rem;
-    }
-
-    .quote-form {
-        gap: 1rem;
+        padding: 2rem 1rem;
+        text-align: center;
     }
 
     .quote-form .form-group {
-        gap: 0.3rem;
+        text-align: left;
+        margin-bottom: 1.5rem;
     }
 
     .quote-form .form-group label {
-        font-size: 0.9rem;
+        text-align: left;
+        display: block;
+        margin-bottom: 0.5rem;
     }
 
     .quote-form .form-group input,
     .quote-form .form-group select,
     .quote-form .form-group textarea {
-        padding: 0.8rem;
-        font-size: 0.9rem;
+        width: 100%;
+        text-align: left;
     }
 
-    .checkbox-label {
-        font-size: 0.8rem;
+    .contact-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .contact-info h3 {
+        font-size: 1.8rem;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .contact-info p {
+        text-align: center;
+        line-height: 1.6;
+    }
+
+    .partners-section {
+        text-align: center;
+        padding: 2rem 1rem;
+    }
+
+    .partners-section h3 {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .partners-slider {
+        text-align: center;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 2rem;
+        padding: 2rem 1rem;
+    }
+
+    .footer-left, .footer-center, .footer-right {
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+    }
+
+    .footer-logo {
+        margin: 0 auto 1rem auto;
+    }
+
+    .social-links {
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .social-link {
+        text-align: center;
     }
 }
 
 @media (max-width: 480px) {
     .hero-content h2 {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
+        line-height: 1.2;
+        margin-bottom: 1rem;
     }
 
     .hero-content p {
         font-size: 0.9rem;
+        margin-bottom: 0.8rem;
     }
 
     .cta-button {
         padding: 0.8rem 1.5rem;
         font-size: 0.9rem;
+        width: 100%;
+        max-width: 250px;
     }
 
     .logo-img {
-        height: 80px;
+        height: 70px;
     }
 
     .logo h1 {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
 
     .main-nav {
@@ -998,120 +1008,163 @@ footer {
     }
 
     section {
-        padding: 4rem 1rem;
+        padding: 3rem 0.8rem;
+    }
+
+    section h2 {
+        font-size: 1.6rem;
+        margin-bottom: 1.5rem;
     }
 
     .service-card {
-        padding: 1.5rem;
+        padding: 1.5rem 0.8rem;
+        margin: 0 0.5rem;
     }
 
-    .feature-item {
-        padding: 1.5rem;
+    .service-card h3 {
+        font-size: 1.3rem;
     }
 
-    .contact-method {
-        padding: 1.5rem;
+    .service-card p {
+        font-size: 0.9rem;
     }
 
     .about-content {
         grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: 1.5rem;
     }
 
     .about-text h3 {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
     }
 
     .about-text p {
-        font-size: 1rem;
+        font-size: 0.9rem;
+        line-height: 1.5;
     }
 
     .about-features {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
+        gap: 1rem;
     }
 
     .about-feature {
-        padding: 1rem;
+        padding: 1rem 0.8rem;
     }
 
     .about-feature i {
-        font-size: 2rem;
+        font-size: 1.8rem;
+        margin-bottom: 0.8rem;
     }
 
     .about-feature h4 {
-        font-size: 1.1rem;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
     }
 
     .about-feature p {
         font-size: 0.8rem;
     }
 
-    .company-features h3,
     .partners-section h3 {
-        font-size: 1.3rem;
-    }
-
-    .service-area-info {
-        font-size: 0.9rem;
-    }
-
-    .company-features > p {
-        font-size: 0.9rem;
+        font-size: 1.4rem;
+        margin-bottom: 1.5rem;
     }
 
     .quote-container {
         grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: 1.5rem;
     }
 
     .quote-content h3 {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
     }
 
     .quote-content p {
-        font-size: 1rem;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .quote-methods {
+        grid-template-columns: 1fr;
+        gap: 1rem;
     }
 
     .quote-method {
-        padding: 1.5rem;
+        padding: 1.2rem 0.8rem;
+    }
+
+    .quote-method i {
+        font-size: 1.8rem;
+        margin-bottom: 0.8rem;
     }
 
     .quote-method h4 {
-        font-size: 1.1rem;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
     }
 
     .quote-method p {
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
 
     .quote-form-container {
-        padding: 2rem;
+        padding: 1.5rem 0.8rem;
     }
 
-    .form-row {
-        grid-template-columns: 1fr;
+    .quote-form .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .quote-form .form-group label {
+        font-size: 0.9rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .quote-form .form-group input,
+    .quote-form .form-group select,
+    .quote-form .form-group textarea {
+        padding: 0.7rem;
+        font-size: 0.9rem;
     }
 
     .contact-container {
         grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: 1.5rem;
     }
 
     .contact-info h3 {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
     }
 
-    .contact-detail {
-        padding: 1rem;
-    }
-
-    .contact-detail h4 {
-        font-size: 1.1rem;
-    }
-
-    .contact-detail p {
+    .contact-info p {
         font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .footer-content {
+        padding: 1.5rem 0.8rem;
+        gap: 1.5rem;
+    }
+
+    .footer-left, .footer-center, .footer-right {
+        padding: 0 0.5rem;
+    }
+
+    .footer-logo {
+        height: 100px;
+    }
+
+    .social-links {
+        gap: 0.8rem;
+    }
+
+    .social-link {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.8rem;
     }
 }
 
@@ -2166,4 +2219,117 @@ footer {
 }
 .footer-links-bottom a:hover {
     color: white;
+} 
+
+/* 모바일 최적화 추가 스타일 */
+@media (max-width: 768px) {
+    /* 터치 친화적인 버튼 크기 */
+    .cta-button,
+    .submit-button,
+    .calculate-button {
+        min-height: 44px;
+        touch-action: manipulation;
+    }
+
+    /* 폼 요소 터치 최적화 */
+    .quote-form input,
+    .quote-form select,
+    .quote-form textarea {
+        min-height: 44px;
+        touch-action: manipulation;
+    }
+
+    /* 네비게이션 터치 최적화 */
+    .nav-links a {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* 스크롤 부드럽게 */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* 이미지 반응형 처리 */
+    .service-card img,
+    .about-image img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    /* 텍스트 가독성 개선 */
+    .hero-content p,
+    .about-text p,
+    .quote-content p,
+    .contact-info p {
+        line-height: 1.6;
+        word-break: keep-all;
+    }
+
+    /* 아이콘과 텍스트 간격 조정 */
+    .service-card h3 i,
+    .about-feature i,
+    .quote-method i {
+        margin-right: 0.5rem;
+    }
+
+    /* 섹션 간격 조정 */
+    section {
+        margin-bottom: 0;
+    }
+
+    /* 푸터 정렬 개선 */
+    .footer-content {
+        text-align: center;
+    }
+
+    .footer-center p {
+        margin-bottom: 0.5rem;
+    }
+
+    /* 소셜 링크 터치 최적화 */
+    .social-link {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    /* 더 작은 화면에서 추가 최적화 */
+    .hero-content {
+        padding: 0 0.5rem;
+    }
+
+    .service-card,
+    .about-feature,
+    .quote-method {
+        margin-bottom: 1rem;
+    }
+
+    /* 텍스트 크기 조정 */
+    .hero-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .service-card h3 {
+        font-size: 1.2rem;
+    }
+
+    /* 버튼 크기 조정 */
+    .cta-button {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.85rem;
+    }
+
+    /* 폼 요소 크기 조정 */
+    .quote-form input,
+    .quote-form select,
+    .quote-form textarea {
+        font-size: 16px; /* iOS에서 줌 방지 */
+    }
 } 
