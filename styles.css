@@ -2369,3 +2369,31 @@ footer {
 .logo, header img, .header-logo {
   display: none !important;
 } 
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: flex !important;
+    flex-direction: row !important;
+    position: static !important;
+    width: 100%;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+  }
+  .nav-links li {
+    width: auto;
+  }
+  .nav-links a {
+    border-bottom: none;
+    padding: 0.7rem 0.7rem;
+    font-size: 1rem;
+    text-align: center;
+    width: auto;
+  }
+  .mobile-menu-btn {
+    display: none !important;
+  }
+} 
