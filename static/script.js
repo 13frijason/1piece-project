@@ -1,5 +1,61 @@
-// 카카오톡 SDK 초기화
-Kakao.init('YOUR_KAKAO_APP_KEY');
+
+
+// 실시간 채팅 위젯
+const liveChatBtn = document.querySelector('.live-chat-button');
+const liveChatWidget = document.getElementById('live-chat-widget');
+const closeChatBtn = document.querySelector('.close-chat');
+const chatMessages = document.querySelector('.chat-messages');
+const chatInput = document.querySelector('.chat-input input');
+const sendMessageBtn = document.querySelector('.send-message');
+
+if (liveChatBtn) {
+    liveChatBtn.addEventListener('click', () => {
+        liveChatWidget.style.display = 'block';
+        addMessage('상담원', '안녕하세요! 원피스공조입니다. 무엇을 도와드릴까요?');
+    });
+}
+
+if (closeChatBtn) {
+    closeChatBtn.addEventListener('click', () => {
+        liveChatWidget.style.display = 'none';
+    });
+}
+
+function addMessage(sender, message) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${sender.toLowerCase()}`;
+    messageDiv.innerHTML = `
+        <strong>${sender}:</strong>
+        <p>${message}</p>
+    `;
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+if (sendMessageBtn) {
+    sendMessageBtn.addEventListener('click', sendMessage);
+}
+
+if (chatInput) {
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+}
+
+function sendMessage() {
+    const message = chatInput.value.trim();
+    if (message) {
+        addMessage('고객', message);
+        chatInput.value = '';
+        
+        // 자동 응답 (실제로는 서버와 통신)
+        setTimeout(() => {
+            addMessage('상담원', '문의해 주셔서 감사합니다. 잠시만 기다려주세요.');
+        }, 1000);
+    }
+}
 
 // 네비게이션 바 스크롤 효과
 window.addEventListener('scroll', function() {
@@ -42,13 +98,8 @@ document.querySelectorAll('.nav-links a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const targetId = this.getAttribute('href');
-        // 견적문의 메뉴 클릭 시 폼으로 이동
-        let targetSection;
-        if (targetId === '#quote') {
-            targetSection = document.getElementById('quote-form');
-        } else {
-            targetSection = document.querySelector(targetId);
-        }
+        const targetSection = document.querySelector(targetId);
+        
         if (targetSection) {
             // 홈(#hero) 클릭 시는 맨 위로 이동
             if (targetId === '#hero') {
@@ -113,60 +164,9 @@ document.getElementById('calculator-form').addEventListener('submit', function(e
     `;
 });
 
-// 카카오톡 채팅 시작
-document.getElementById('kakao-chat').addEventListener('click', function() {
-    Kakao.Channel.chat({
-        channelPublicId: 'YOUR_CHANNEL_PUBLIC_ID'
-    });
-});
 
-// 실시간 채팅 위젯
-const liveChatBtn = document.getElementById('live-chat');
-const liveChatWidget = document.getElementById('live-chat-widget');
-const closeChatBtn = document.querySelector('.close-chat');
-const chatMessages = document.querySelector('.chat-messages');
-const chatInput = document.querySelector('.chat-input input');
-const sendMessageBtn = document.querySelector('.send-message');
 
-liveChatBtn.addEventListener('click', () => {
-    liveChatWidget.style.display = 'block';
-    addMessage('상담원', '안녕하세요! 원피스공조입니다. 무엇을 도와드릴까요?');
-});
 
-closeChatBtn.addEventListener('click', () => {
-    liveChatWidget.style.display = 'none';
-});
-
-function addMessage(sender, message) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${sender.toLowerCase()}`;
-    messageDiv.innerHTML = `
-        <strong>${sender}:</strong>
-        <p>${message}</p>
-    `;
-    chatMessages.appendChild(messageDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-sendMessageBtn.addEventListener('click', sendMessage);
-chatInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        sendMessage();
-    }
-});
-
-function sendMessage() {
-    const message = chatInput.value.trim();
-    if (message) {
-        addMessage('고객', message);
-        chatInput.value = '';
-        
-        // 자동 응답 (실제로는 서버와 통신)
-        setTimeout(() => {
-            addMessage('상담원', '문의해 주셔서 감사합니다. 잠시만 기다려주세요.');
-        }, 1000);
-    }
-}
 
 // 갤러리 이미지 로딩
 function loadGalleryImages() {
@@ -349,4 +349,17 @@ document.addEventListener('keydown', (e) => {
         calculatorModal.style.display = 'none';
         document.body.style.overflow = '';
     }
+}); 
+
+document.addEventListener('DOMContentLoaded', function() {
+  const navQuote = document.querySelector('.nav-links a[href="#quote"]');
+  if (navQuote) {
+    navQuote.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.getElementById('quote');
+      const offset = 50; // 헤더 높이 등 원하는 만큼 조절
+      const y = target.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    });
+  }
 }); 

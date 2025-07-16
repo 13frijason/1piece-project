@@ -1,0 +1,30 @@
+{
+  "name": "doyeon-system-lab",
+  "version": "1.0.0",
+  "description": "도연시스템연구소 공식 웹사이트",
+  "main": "index.html",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'Static site - no build required'",
+    "deploy": "netlify deploy --prod"
+  },
+  "keywords": [
+    "냉난방",
+    "에어컨",
+    "설비",
+    "견적",
+    "static-site"
+  ],
+  "author": "도연시스템연구소",
+  "license": "MIT",
+  "devDependencies": {
+    "netlify-cli": "^15.0.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0",
+    "bcryptjs": "^2.4.3"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+} 

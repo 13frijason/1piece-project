@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>견적문의 상세보기 - 도연시스템연구소</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .post-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .post-header {
+            margin-bottom: 2rem;
+        }
+        .post-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .post-info {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .post-info-item {
+            margin-right: 1.5rem;
+        }
+        .post-info-item i {
+            margin-right: 0.5rem;
+        }
+        .content-section {
+            margin-bottom: 2rem;
+        }
+        .content-section h3 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        .estimate-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        .estimate-item h4 {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .estimate-item p {
+            color: #333;
+            font-size: 1.1rem;
+        }
+        .button-group {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .status-pending {
+            color: #ffc107;
+        }
+        .status-completed {
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <i class="fas fa-snowflake"></i>
+                도연시스템연구소
+            </div>
+            <ul>
+                <li><a href="index.html">홈</a></li>
+                <li><a href="index.html#services">서비스</a></li>
+                <li><a href="index.html#about">회사소개</a></li>
+                <li><a href="board.html">견적문의</a></li>
+                <li><a href="index.html#contact">연락처</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="post-container">
+        <div class="post-header">
+            <h1 class="post-title">견적문의 상세보기</h1>
+            <div class="post-info">
+                <div class="post-info-left">
+                    <span class="post-info-item">
+                        <i class="fas fa-user"></i>
+                        작성자: 홍길동
+                    </span>
+                    <span class="post-info-item">
+                        <i class="fas fa-phone"></i>
+                        연락처: 0102****3051
+                    </span>
+                </div>
+                <div class="post-info-right">
+                    <span class="post-info-item">
+                        <i class="fas fa-calendar"></i>
+                        작성일: 2024-03-21
+                    </span>
+                    <span class="post-info-item">
+                        <i class="fas fa-clock"></i>
+                        상태: <span class="status-pending">대기중</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="post-content">
+            <div class="content-section">
+                <h3>설치 정보</h3>
+                <div class="estimate-details">
+                    <div class="estimate-item">
+                        <h4>설치 유형</h4>
+                        <p>에어컨 설치</p>
+                    </div>
+                    <div class="estimate-item">
+                        <h4>설치 장소</h4>
+                        <p>거실</p>
+                    </div>
+                    <div class="estimate-item">
+                        <h4>평수</h4>
+                        <p>30평</p>
+                    </div>
+                    <div class="estimate-item">
+                        <h4>설치 희망일</h4>
+                        <p>2024-03-25</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h3>설치 주소</h3>
+                <p>서울특별시 강남구</p>
+            </div>
+
+            <div class="content-section">
+                <h3>추가 요청사항</h3>
+                <p>빠른 시일 내에 설치 부탁드립니다.</p>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <a href="board.html" class="btn btn-secondary">목록으로</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <h3><i class="fas fa-snowflake"></i> 도연시스템연구소</h3>
+                <p>최고의 전문성과 서비스로 고객님께 만족을 드리겠습니다.</p>
+            </div>
+            <div class="footer-contact">
+                <p><i class="fas fa-phone"></i> 010-2789-3051</p>
+                <p><i class="fas fa-envelope"></i> info@doyeon.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 도연시스템연구소. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="static/js/script.js"></script>
+</body>
+</html> 
