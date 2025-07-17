@@ -6,7 +6,19 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // 페이지 로드 시 견적문의 목록 로드
 document.addEventListener('DOMContentLoaded', function() {
-    loadEstimates();
+    // URL 파라미터 확인
+    const urlParams = new URLSearchParams(window.location.search);
+    const customerName = urlParams.get('customer-name');
+    const customerPhone = urlParams.get('customer-phone');
+    const serviceType = urlParams.get('service-type');
+    const detailedRequest = urlParams.get('detailed-request');
+    
+    // 폼 데이터가 있으면 자동으로 견적문의 생성
+    if (customerName && customerPhone && serviceType && detailedRequest) {
+        createEstimateFromForm(customerName, customerPhone, serviceType, detailedRequest);
+    } else {
+        loadEstimates();
+    }
 });
 
 // 견적문의 목록 로드 함수
@@ -92,6 +104,54 @@ function showMessage(message, type = 'success') {
     setTimeout(() => {
         flashMessages.style.display = 'none';
     }, 3000);
+}
+
+// 폼 데이터로부터 견적문의 생성 함수
+async function createEstimateFromForm(customerName, customerPhone, serviceType, detailedRequest) {
+    try {
+        // 서비스 타입에 따른 제목 생성
+        const serviceTypeMap = {
+            'aircon': '에어컨 설치',
+            'hvac': '냉난방 시스템',
+            'ventilation': '환기 시스템',
+            'maintenance': '정기 점검',
+            'other': '기타'
+        };
+        
+        const title = `${serviceTypeMap[serviceType] || '견적문의'} - ${customerName}`;
+        
+        // 견적문의 데이터 생성
+        const estimateData = {
+            title: title,
+            name: customerName,
+            phone: customerPhone,
+            content: `서비스 종류: ${serviceTypeMap[serviceType] || serviceType}\n\n상세 요청사항:\n${detailedRequest}`,
+            status: '대기중'
+        };
+        
+        // Supabase에 견적문의 저장
+        const { data, error } = await supabaseClient
+            .from('estimates')
+            .insert([estimateData]);
+            
+        if (error) {
+            console.error('견적문의 생성 오류:', error);
+            showMessage('견적문의 생성에 실패했습니다.', 'error');
+            loadEstimates(); // 기존 목록 로드
+            return;
+        }
+        
+        showMessage('견적문의가 성공적으로 등록되었습니다!', 'success');
+        
+        // URL 파라미터 제거하고 목록 새로고침
+        window.history.replaceState({}, document.title, window.location.pathname);
+        loadEstimates();
+        
+    } catch (error) {
+        console.error('견적문의 생성 오류:', error);
+        showMessage('견적문의 생성에 실패했습니다.', 'error');
+        loadEstimates(); // 기존 목록 로드
+    }
 }
 
 // 견적문의 삭제 함수

@@ -484,6 +484,31 @@ function initializeCommonFeatures() {
             e.target.style.display = 'none';
         }
     });
+
+    // 견적문의 폼 제출 처리
+    const quoteForm = document.getElementById('quote-form');
+    if (quoteForm) {
+        quoteForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 폼 데이터 수집
+            const formData = new FormData(this);
+            const customerName = formData.get('customer-name');
+            const customerPhone = formData.get('customer-phone');
+            const serviceType = formData.get('service-type');
+            const detailedRequest = formData.get('detailed-request');
+            
+            // 폼 데이터를 URL 파라미터로 변환
+            const params = new URLSearchParams();
+            params.append('customer-name', customerName);
+            params.append('customer-phone', customerPhone);
+            params.append('service-type', serviceType);
+            params.append('detailed-request', detailedRequest);
+            
+            // board.html로 이동하면서 폼 데이터 전달
+            window.location.href = `board.html?${params.toString()}`;
+        });
+    }
 }
 
 // 갤러리 이미지 로드 함수

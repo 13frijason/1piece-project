@@ -50,10 +50,8 @@ async function handleSubmit(e) {
         // 폼 초기화
         e.target.reset();
         
-        // 2초 후 게시판으로 이동
-        setTimeout(() => {
-            window.location.href = 'board.html';
-        }, 2000);
+        // 바로 게시판으로 이동
+        window.location.href = 'board.html';
         
     } catch (error) {
         console.error('견적문의 등록 오류:', error);
