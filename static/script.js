@@ -123,7 +123,9 @@ document.querySelectorAll('.nav-links a[href^="#"]').forEach(anchor => {
 });
 
 // 설치비 계산기
-document.getElementById('calculator-form').addEventListener('submit', function(e) {
+const calculatorForm = document.getElementById('calculator-form');
+if (calculatorForm) {
+    calculatorForm.addEventListener('submit', function(e) {
     e.preventDefault();
     
     const productType = document.getElementById('product-type').value;
@@ -163,9 +165,7 @@ document.getElementById('calculator-form').addEventListener('submit', function(e
         <p class="note">* 실제 견적은 현장 방문 후 정확한 견적이 산출됩니다.</p>
     `;
 });
-
-
-
+}
 
 
 // 갤러리 이미지 로딩
