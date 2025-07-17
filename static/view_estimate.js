@@ -2,7 +2,7 @@
 const SUPABASE_URL = 'https://jykkpfrpnpkycqyokqnm.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5a2twZnJwbnBreWNxeW9rcW5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3MTY1NjgsImV4cCI6MjA2ODI5MjU2OH0.vMXLe-ccOQXuH2I6M-9WIYJcxoCMQygh5ldBGdd3jzk';
 
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // 페이지 로드 시 견적문의 상세 정보 로드
 document.addEventListener('DOMContentLoaded', function() {
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // 견적문의 상세 정보 로드 함수
 async function loadEstimateDetail(id) {
     try {
-        const { data: estimate, error } = await supabase
+        const { data: estimate, error } = await supabaseClient
             .from('estimates')
             .select('*')
             .eq('id', id)
