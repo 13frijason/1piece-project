@@ -152,7 +152,7 @@
             <p class="form-subtitle">원하시는 서비스에 대한 견적을 문의해 주세요</p>
         </div>
 
-        <form method="post" class="estimate-form">
+        <form id="estimate-form" class="estimate-form">
             <div class="form-row">
                 <div class="form-group">
                     <label for="name">이름 <span class="required">*</span></label>
@@ -186,6 +186,9 @@
             <button type="submit" class="submit-button">
                 <i class="fas fa-paper-plane"></i> 문의하기
             </button>
+        </form>
+        
+        <div id="flash-messages" class="flash-messages" style="display: none;"></div>
         </form>
 
         <div style="text-align: center;">
@@ -225,6 +228,9 @@
         </div>
     </footer>
 
+    <!-- Supabase 클라이언트 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="static/script.js"></script>
+    <script src="static/new_estimate.js"></script>
 </body>
 </html> 

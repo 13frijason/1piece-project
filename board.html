@@ -350,77 +350,21 @@
             </div>
         </div>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flash-messages">
-                    {% for category, message in messages %}
-                        <div class="flash-message flash-{{ category }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-
         <div class="board-content">
-            {% if estimates.items %}
-                <div class="estimates-list">
-                    {% for estimate in estimates.items %}
-                        <div class="estimate-item" data-id="{{ estimate.id }}">
-                            <div class="estimate-header">
-                                <h3 class="estimate-title">{{ estimate.title }}</h3>
-                                <span class="estimate-date">{{ estimate.created_at.strftime('%Y-%m-%d') }}</span>
-                            </div>
-                            <div class="estimate-info">
-                                <p class="estimate-name">작성자: <span class="name-text">{{ estimate.name }}</span></p>
-                                <p class="estimate-phone">연락처: <span class="phone-text">{{ estimate.phone }}</span></p>
-                                <p class="estimate-status">상태: <span class="status-{{ estimate.status.lower() }}">{{ estimate.status }}</span></p>
-                            </div>
-                            <div class="estimate-content">
-                                <p>{{ estimate.content[:100] }}{% if estimate.content|length > 100 %}...{% endif %}</p>
-                            </div>
-                            <div class="estimate-actions">
-                                <a href="view_estimate.html" class="view-button">상세보기</a>
-                                <form method="post" action="#" style="display: inline;" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-                                    <button type="submit" class="delete-button">
-                                        <i class="fas fa-trash"></i> 삭제
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-
-                <!-- 페이지네이션 -->
-                {% if estimates.pages > 1 %}
-                    <div class="board-pagination">
-                        {% if estimates.has_prev %}
-                            <a href="board.html" class="page-button">&laquo; 이전</a>
-                        {% endif %}
-                        
-                        {% for page_num in estimates.iter_pages() %}
-                            {% if page_num %}
-                                {% if page_num != estimates.page %}
-                                    <a href="board.html" class="page-button">{{ page_num }}</a>
-                                {% else %}
-                                    <span class="page-button active">{{ page_num }}</span>
-                                {% endif %}
-                            {% else %}
-                                <span class="page-button">...</span>
-                            {% endif %}
-                        {% endfor %}
-                        
-                        {% if estimates.has_next %}
-                            <a href="board.html" class="page-button">다음 &raquo;</a>
-                        {% endif %}
-                    </div>
-                {% endif %}
-            {% else %}
-                <div class="no-estimates">
-                    <p>아직 견적문의가 없습니다.</p>
-                    <a href="new_estimate.html" class="write-button">첫 번째 견적문의 작성하기</a>
-                </div>
-            {% endif %}
+            <div id="flash-messages" class="flash-messages" style="display: none;"></div>
+            
+            <div id="estimates-list" class="estimates-list">
+                <!-- 견적문의 목록이 여기에 동적으로 로드됩니다 -->
+            </div>
+            
+            <div id="board-pagination" class="board-pagination" style="display: none;">
+                <!-- 페이지네이션이 여기에 동적으로 로드됩니다 -->
+            </div>
+            
+            <div id="no-estimates" class="no-estimates" style="display: none;">
+                <p>아직 견적문의가 없습니다.</p>
+                <a href="new_estimate.html" class="write-button">첫 번째 견적문의 작성하기</a>
+            </div>
         </div>
     </div>
 
@@ -454,6 +398,9 @@
         </div>
     </footer>
 
+    <!-- Supabase 클라이언트 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="static/script.js"></script>
+    <script src="static/board.js"></script>
 </body>
 </html> 

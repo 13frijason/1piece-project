@@ -1,0 +1,77 @@
+// Supabase 설정
+const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // 실제 Supabase URL로 변경 필요
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // 실제 Supabase Anon Key로 변경 필요
+
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// 페이지 로드 시 견적문의 상세 정보 로드
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const estimateId = urlParams.get('id');
+    
+    if (estimateId) {
+        loadEstimateDetail(estimateId);
+    } else {
+        showError('견적문의 ID가 없습니다.');
+    }
+});
+
+// 견적문의 상세 정보 로드 함수
+async function loadEstimateDetail(id) {
+    try {
+        const { data: estimate, error } = await supabase
+            .from('estimates')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error) {
+            console.error('견적문의 로드 오류:', error);
+            showError('견적문의를 불러오는데 실패했습니다.');
+            return;
+        }
+
+        if (!estimate) {
+            showError('견적문의를 찾을 수 없습니다.');
+            return;
+        }
+
+        displayEstimateDetail(estimate);
+    } catch (error) {
+        console.error('견적문의 로드 오류:', error);
+        showError('견적문의를 불러오는데 실패했습니다.');
+    }
+}
+
+// 견적문의 상세 정보 표시 함수
+function displayEstimateDetail(estimate) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('estimate-detail').style.display = 'block';
+    
+    document.getElementById('estimate-title').textContent = estimate.title;
+    document.getElementById('estimate-name').textContent = estimate.name;
+    document.getElementById('estimate-phone').textContent = estimate.phone;
+    document.getElementById('estimate-status').textContent = estimate.status;
+    document.getElementById('estimate-status').className = `status-badge status-${estimate.status.toLowerCase()}`;
+    document.getElementById('estimate-date').textContent = formatDate(estimate.created_at);
+    document.getElementById('estimate-content').textContent = estimate.content;
+}
+
+// 날짜 포맷 함수
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+// 오류 메시지 표시 함수
+function showError(message) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('error-message').style.display = 'block';
+    document.getElementById('error-message').innerHTML = `<p>${message}</p>`;
+} 
