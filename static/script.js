@@ -214,19 +214,22 @@ function showImageModal(image) {
 }
 
 // 문의하기 폼 제출 처리
-document.getElementById('contact-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const formData = new FormData(this);
-    const data = Object.fromEntries(formData);
-    
-    // 여기에 실제 폼 제출 로직 구현
-    console.log('문의사항 제출:', data);
-    
-    // 성공 메시지 표시
-    alert('문의사항이 접수되었습니다. 빠른 시일 내에 연락드리겠습니다.');
-    this.reset();
-});
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData);
+        
+        // 여기에 실제 폼 제출 로직 구현
+        console.log('문의사항 제출:', data);
+        
+        // 성공 메시지 표시
+        alert('문의사항이 접수되었습니다. 빠른 시일 내에 연락드리겠습니다.');
+        this.reset();
+    });
+}
 
 // 페이지 로드 시 갤러리 이미지 로드
 document.addEventListener('DOMContentLoaded', loadGalleryImages);
@@ -324,28 +327,38 @@ const calculatorBtn = document.getElementById('calculator-btn');
 const calculatorModal = document.getElementById('calculator-modal');
 const closeModalBtn = document.querySelector('.close-modal');
 
-calculatorBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    calculatorModal.style.display = 'block';
-    document.body.style.overflow = 'hidden'; // 배경 스크롤 방지
-});
+if (calculatorBtn) {
+    calculatorBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (calculatorModal) {
+            calculatorModal.style.display = 'block';
+            document.body.style.overflow = 'hidden'; // 배경 스크롤 방지
+        }
+    });
+}
 
-closeModalBtn.addEventListener('click', () => {
-    calculatorModal.style.display = 'none';
-    document.body.style.overflow = ''; // 스크롤 복원
-});
+if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', () => {
+        if (calculatorModal) {
+            calculatorModal.style.display = 'none';
+            document.body.style.overflow = ''; // 스크롤 복원
+        }
+    });
+}
 
 // 모달 외부 클릭시 닫기
-calculatorModal.addEventListener('click', (e) => {
-    if (e.target === calculatorModal) {
-        calculatorModal.style.display = 'none';
-        document.body.style.overflow = '';
-    }
-});
+if (calculatorModal) {
+    calculatorModal.addEventListener('click', (e) => {
+        if (e.target === calculatorModal) {
+            calculatorModal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    });
+}
 
 // ESC 키로 모달 닫기
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && calculatorModal.style.display === 'block') {
+    if (e.key === 'Escape' && calculatorModal && calculatorModal.style.display === 'block') {
         calculatorModal.style.display = 'none';
         document.body.style.overflow = '';
     }
