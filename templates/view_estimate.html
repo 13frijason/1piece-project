@@ -171,16 +171,16 @@
         <nav class="main-nav">
             <div class="logo">
                 <h1>
-                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="원피스공조 로고" class="logo-img">
+                    <img src="static/images/logo.png" alt="원피스공조 로고" class="logo-img">
                 </h1>
             </div>
             <ul class="nav-links">
-                <li><a href="{{ url_for('index') }}#hero">홈</a></li>
-                <li><a href="{{ url_for('index') }}#services">서비스</a></li>
-                <li><a href="{{ url_for('index') }}#construction-site">시공사진</a></li>
-                <li><a href="{{ url_for('index') }}#about">회사소개</a></li>
-                <li><a href="{{ url_for('index') }}#quote">견적문의</a></li>
-                <li><a href="{{ url_for('index') }}#contact">Contact</a></li>
+                <li><a href="index.html#hero">홈</a></li>
+                <li><a href="index.html#services">서비스</a></li>
+                <li><a href="index.html#construction-site">시공사진</a></li>
+                <li><a href="index.html#about">회사소개</a></li>
+                <li><a href="index.html#quote">견적문의</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
             </ul>
             <div class="mobile-menu-btn">
                 <span></span>
@@ -240,15 +240,15 @@
             </div>
 
             <div class="action-buttons">
-                <a href="{{ url_for('board') }}" class="btn btn-secondary">
+                <a href="board.html" class="btn btn-secondary">
                     <i class="fas fa-list"></i>
                     목록으로
                 </a>
-                <a href="{{ url_for('new_estimate') }}" class="btn btn-primary">
+                <a href="new_estimate.html" class="btn btn-primary">
                     <i class="fas fa-pen"></i>
                     새 견적문의
                 </a>
-                <form method="post" action="{{ url_for('delete_estimate', id=estimate.id) }}" style="display: inline;" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                <form method="post" action="#" style="display: inline;" onsubmit="return confirm('정말 삭제하시겠습니까?');">
                     <button type="submit" class="btn btn-danger">
                         <i class="fas fa-trash"></i>
                         삭제
@@ -261,7 +261,7 @@
     <footer>
         <div class="footer-content">
             <div class="footer-left">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="원피스공조 로고" class="footer-logo">
+                <img src="static/images/logo.png" alt="원피스공조 로고" class="footer-logo">
             </div>
             <div class="footer-center">
                 <h3>원피스공조</h3>

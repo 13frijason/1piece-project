@@ -317,16 +317,16 @@
         <nav class="main-nav">
             <div class="logo">
                 <h1>
-                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="원피스공조 로고" class="logo-img">
+                    <img src="static/images/logo.png" alt="원피스공조 로고" class="logo-img">
                 </h1>
             </div>
             <ul class="nav-links">
-                <li><a href="{{ url_for('index') }}#hero">홈</a></li>
-                <li><a href="{{ url_for('index') }}#services">서비스</a></li>
-                <li><a href="{{ url_for('index') }}#construction-site">시공사진</a></li>
-                <li><a href="{{ url_for('index') }}#about">회사소개</a></li>
-                <li><a href="{{ url_for('index') }}#quote">견적문의</a></li>
-                <li><a href="{{ url_for('index') }}#contact">Contact</a></li>
+                <li><a href="index.html#hero">홈</a></li>
+                <li><a href="index.html#services">서비스</a></li>
+                <li><a href="index.html#construction-site">시공사진</a></li>
+                <li><a href="index.html#about">회사소개</a></li>
+                <li><a href="index.html#quote">견적문의</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
             </ul>
             <div class="mobile-menu-btn">
                 <span></span>
@@ -343,7 +343,7 @@
                 <p class="board-subtitle">고객님들의 견적문의를 확인하실 수 있습니다</p>
             </div>
             <div class="board-actions">
-                <a href="{{ url_for('new_estimate') }}" class="write-button">
+                <a href="new_estimate.html" class="write-button">
                     <i class="fas fa-pen"></i>
                     견적문의 작성
                 </a>
@@ -380,8 +380,8 @@
                                 <p>{{ estimate.content[:100] }}{% if estimate.content|length > 100 %}...{% endif %}</p>
                             </div>
                             <div class="estimate-actions">
-                                <a href="{{ url_for('view_estimate', id=estimate.id) }}" class="view-button">상세보기</a>
-                                <form method="post" action="{{ url_for('delete_estimate', id=estimate.id) }}" style="display: inline;" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                                <a href="view_estimate.html" class="view-button">상세보기</a>
+                                <form method="post" action="#" style="display: inline;" onsubmit="return confirm('정말 삭제하시겠습니까?');">
                                     <button type="submit" class="delete-button">
                                         <i class="fas fa-trash"></i> 삭제
                                     </button>
@@ -395,13 +395,13 @@
                 {% if estimates.pages > 1 %}
                     <div class="board-pagination">
                         {% if estimates.has_prev %}
-                            <a href="{{ url_for('board', page=estimates.prev_num) }}" class="page-button">&laquo; 이전</a>
+                            <a href="board.html" class="page-button">&laquo; 이전</a>
                         {% endif %}
                         
                         {% for page_num in estimates.iter_pages() %}
                             {% if page_num %}
                                 {% if page_num != estimates.page %}
-                                    <a href="{{ url_for('board', page=page_num) }}" class="page-button">{{ page_num }}</a>
+                                    <a href="board.html" class="page-button">{{ page_num }}</a>
                                 {% else %}
                                     <span class="page-button active">{{ page_num }}</span>
                                 {% endif %}
@@ -411,14 +411,14 @@
                         {% endfor %}
                         
                         {% if estimates.has_next %}
-                            <a href="{{ url_for('board', page=estimates.next_num) }}" class="page-button">다음 &raquo;</a>
+                            <a href="board.html" class="page-button">다음 &raquo;</a>
                         {% endif %}
                     </div>
                 {% endif %}
             {% else %}
                 <div class="no-estimates">
                     <p>아직 견적문의가 없습니다.</p>
-                    <a href="{{ url_for('new_estimate') }}" class="write-button">첫 번째 견적문의 작성하기</a>
+                    <a href="new_estimate.html" class="write-button">첫 번째 견적문의 작성하기</a>
                 </div>
             {% endif %}
         </div>
@@ -427,7 +427,7 @@
     <footer>
         <div class="footer-content">
             <div class="footer-left">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="원피스공조 로고" class="footer-logo">
+                <img src="static/images/logo.png" alt="원피스공조 로고" class="footer-logo">
             </div>
             <div class="footer-center">
                 <h3>원피스공조</h3>
