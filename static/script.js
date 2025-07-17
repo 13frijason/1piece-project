@@ -376,3 +376,210 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 }); 
+
+// 페이지별 기능 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    // 현재 페이지 URL 확인
+    const currentPage = window.location.pathname;
+    
+    // 갤러리 이미지 로드 (메인 페이지에서만)
+    if (currentPage === '/' || currentPage === '/index.html' || currentPage.includes('index.html')) {
+        loadGalleryImages();
+    }
+    
+    // 슬라이더 기능 (메인 페이지에서만)
+    if (currentPage === '/' || currentPage === '/index.html' || currentPage.includes('index.html')) {
+        initializeSlider();
+    }
+    
+    // 기타 공통 기능들
+    initializeCommonFeatures();
+});
+
+// 공통 기능 초기화
+function initializeCommonFeatures() {
+    // 실시간 채팅
+    const liveChatBtn = document.querySelector('.live-chat-button');
+    const liveChatWidget = document.getElementById('live-chat-widget');
+    const closeChatBtn = document.querySelector('.close-chat');
+    const chatMessages = document.querySelector('.chat-messages');
+    const chatInput = document.querySelector('.chat-input input');
+    const sendMessageBtn = document.querySelector('.send-message');
+
+    if (liveChatBtn && liveChatWidget) {
+        liveChatBtn.addEventListener('click', () => {
+            liveChatWidget.classList.add('active');
+        });
+    }
+
+    if (closeChatBtn) {
+        closeChatBtn.addEventListener('click', () => {
+            liveChatWidget.classList.remove('active');
+        });
+    }
+
+    if (sendMessageBtn && chatInput && chatMessages) {
+        sendMessageBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    }
+
+    // 스크롤 이벤트
+    window.addEventListener('scroll', function() {
+        const header = document.querySelector('header');
+        if (header) {
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }
+    });
+
+    // 모바일 메뉴
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (mobileMenuBtn && navLinks) {
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.classList.toggle('active');
+        });
+
+        // 모바일 메뉴 링크 클릭시 메뉴 닫기
+        const navLinksItems = document.querySelectorAll('.nav-links a');
+        navLinksItems.forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+            });
+        });
+    }
+
+    // 부드러운 스크롤
+    document.querySelectorAll('.nav-links a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+            
+            if (targetSection) {
+                const offsetTop = targetSection.offsetTop;
+                const headerHeight = document.querySelector('header').offsetHeight;
+                
+                window.scrollTo({
+                    top: offsetTop - headerHeight,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // 모달 외부 클릭시 닫기
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+        }
+    });
+}
+
+// 갤러리 이미지 로드 함수
+function loadGalleryImages() {
+    const galleryGrid = document.querySelector('.gallery-grid');
+    if (!galleryGrid) return; // 갤러리 그리드가 없으면 함수 종료
+    
+    const galleryImages = [
+        'static/images/gallery1.jpg',
+        'static/images/gallery2.jpg',
+        'static/images/gallery3.jpg',
+        'static/images/gallery4.jpg',
+        'static/images/gallery5.jpg',
+        'static/images/gallery6.jpg',
+        'static/images/gallery7.jpg',
+        'static/images/gallery8.jpg',
+        'static/images/gallery9.jpg',
+        'static/images/gallery10.jpg',
+        'static/images/gallery11.jpg',
+        'static/images/gallery12.jpg',
+        'static/images/gallery13.jpg'
+    ];
+
+    galleryImages.forEach(image => {
+        const imgElement = document.createElement('img');
+        imgElement.src = image;
+        imgElement.alt = '갤러리 이미지';
+        imgElement.style.width = '100%';
+        imgElement.style.height = 'auto';
+        imgElement.style.cursor = 'pointer';
+        
+        imgElement.addEventListener('click', () => showImageModal(image));
+        
+        galleryGrid.appendChild(imgElement);
+    });
+}
+
+// 슬라이더 초기화 함수
+function initializeSlider() {
+    const track = document.querySelector('.slider-track');
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    
+    if (!track || slides.length === 0) return; // 슬라이더 요소가 없으면 함수 종료
+    
+    let currentIndex = 0;
+    const slideWidth = slides[0].offsetWidth;
+    const maxIndex = slides.length - 1;
+
+    function moveSlide(index) {
+        if (track) {
+            track.style.transform = `translateX(-${index * slideWidth}px)`;
+        }
+        currentIndex = index;
+    }
+
+    function nextSlide() {
+        if (currentIndex < maxIndex) {
+            moveSlide(currentIndex + 1);
+        } else {
+            moveSlide(0);
+        }
+    }
+
+    function prevSlide() {
+        if (currentIndex > 0) {
+            moveSlide(currentIndex - 1);
+        } else {
+            moveSlide(slides.length - 1);
+        }
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
+        });
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+        });
+    }
+
+    // 터치 이벤트
+    if (track) {
+        track.addEventListener('touchstart', e => {
+            // 터치 시작 처리
+        });
+
+        track.addEventListener('touchend', e => {
+            // 터치 종료 처리
+        });
+    }
+
+    // 자동 슬라이드
+    setInterval(nextSlide, 5000);
+} 
