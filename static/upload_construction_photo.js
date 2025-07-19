@@ -28,7 +28,7 @@ function setupFormHandlers() {
             return;
         }
         
-        await uploadPhoto(title, description, category, photoFile);
+        await uploadPhoto(title, description, photoFile);
     });
 }
 
@@ -70,7 +70,7 @@ function setupImagePreview() {
 }
 
 // 사진 업로드 함수
-async function uploadPhoto(title, description, category, photoFile) {
+async function uploadPhoto(title, description, photoFile) {
     try {
         showMessage('업로드 중입니다...', 'success');
         
