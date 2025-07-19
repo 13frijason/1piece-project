@@ -20,7 +20,7 @@ function setupFormHandlers() {
         const formData = new FormData(uploadForm);
         const title = formData.get('title');
         const description = formData.get('description');
-        const category = formData.get('category');
+        // const category = formData.get('category'); // 나중에 카테고리 필터 활성화 시 사용
         const photoFile = formData.get('photo');
         
         if (!title || !photoFile) {
@@ -99,7 +99,7 @@ async function uploadPhoto(title, description, category, photoFile) {
         const photoData = {
             title: title,
             description: description || '',
-            category: category,
+            category: '일반', // 기본 카테고리로 설정 (나중에 카테고리 필터 활성화 시 변경)
             image_url: urlData.publicUrl,
             is_active: true
         };

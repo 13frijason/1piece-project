@@ -4,13 +4,13 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// 현재 선택된 카테고리
-let currentCategory = '';
+// 현재 선택된 카테고리 (나중에 카테고리 필터 활성화 시 사용)
+// let currentCategory = '';
 
 // 페이지 로드 시 시공사진 목록 로드
 document.addEventListener('DOMContentLoaded', function() {
     loadConstructionPhotos();
-    setupCategoryFilter();
+    // setupCategoryFilter(); // 나중에 카테고리 필터 활성화 시 사용
 });
 
 // 시공사진 목록 로드 함수
@@ -21,10 +21,10 @@ async function loadConstructionPhotos() {
             .select('*')
             .order('created_at', { ascending: false });
 
-        // 카테고리 필터 적용
-        if (currentCategory) {
-            query = query.eq('category', currentCategory);
-        }
+        // 카테고리 필터 적용 (나중에 활성화 시 사용)
+        // if (currentCategory) {
+        //     query = query.eq('category', currentCategory);
+        // }
 
         const { data: photos, error } = await query;
 
@@ -83,7 +83,8 @@ function displayPhotos(photos) {
     `).join('');
 }
 
-// 카테고리 필터 설정
+// 카테고리 필터 설정 (나중에 활성화 시 사용)
+/*
 function setupCategoryFilter() {
     const categoryButtons = document.querySelectorAll('.category-btn');
     
@@ -105,6 +106,7 @@ function setupCategoryFilter() {
         });
     });
 }
+*/
 
 // 날짜 포맷 함수
 function formatDate(dateString) {
