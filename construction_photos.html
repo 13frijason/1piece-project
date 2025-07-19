@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시공사진 게시판 - 원피스공조</title>
+    <link rel="stylesheet" href="static/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .board-container {
+            max-width: 1400px;
+            margin: 120px auto 50px;
+            padding: 0 20px;
+        }
+
+        .board-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .board-title-section {
+            flex: 1;
+        }
+
+        .board-title {
+            font-size: 2rem;
+            color: var(--text-color);
+            margin: 0 0 5px 0;
+        }
+
+        .board-subtitle {
+            color: #666;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 0.8rem 1.5rem;
+            background: #f8f9fa;
+            color: #666;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: #4a4a4a;
+            color: white;
+            border-color: #4a4a4a;
+        }
+
+        .upload-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .upload-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(40,167,69,0.3);
+        }
+
+        .upload-btn:hover {
+            background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40,167,69,0.4);
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .photo-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .photo-image {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .photo-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .photo-card:hover .photo-image img {
+            transform: scale(1.05);
+        }
+
+        .photo-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .photo-card:hover .photo-overlay {
+            opacity: 1;
+        }
+
+        .photo-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .action-btn.active {
+            background: #28a745;
+            color: white;
+        }
+
+        .action-btn.inactive {
+            background: #6c757d;
+            color: white;
+        }
+
+        .action-btn.delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .photo-info {
+            padding: 1.5rem;
+        }
+
+        .photo-info h3 {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .photo-info p {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .photo-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .category {
+            background: #e9ecef;
+            color: #495057;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-weight: 500;
+        }
+
+        .date {
+            color: #6c757d;
+        }
+
+        .no-photos {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #666;
+        }
+
+        .no-photos i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .no-photos p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .flash-messages {
+            margin-bottom: 2rem;
+        }
+
+        .flash-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .flash-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .flash-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .board-title {
+                font-size: 1.5rem;
+            }
+            
+            .category-filter {
+                gap: 0.5rem;
+            }
+            
+            .category-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .photo-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1rem;
+            }
+            
+            .photo-image {
+                height: 200px;
+            }
+            
+            .photo-info {
+                padding: 1rem;
+            }
+            
+            .photo-info h3 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="main-nav">
+            <div class="logo">
+                <h1>
+                    <img src="static/images/logo.png" alt="원피스공조 로고" class="logo-img">
+                </h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">홈</a></li>
+                <li><a href="index.html#services">서비스</a></li>
+                <li><a href="index.html#construction-site">시공사진</a></li>
+                <li><a href="index.html#about">회사소개</a></li>
+                <li><a href="index.html#quote">견적문의</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="board-container">
+        <div class="board-header">
+            <div class="board-title-section">
+                <h1 class="board-title"><i class="fas fa-images"></i> 시공사진 게시판</h1>
+                <p class="board-subtitle">원피스공조의 다양한 시공현장 사진들을 확인하세요</p>
+            </div>
+            <div class="board-actions">
+                <a href="upload_construction_photo.html" class="upload-btn">
+                    <i class="fas fa-upload"></i>
+                    사진 업로드
+                </a>
+            </div>
+        </div>
+
+        <div class="board-content">
+            <div id="flash-messages" class="flash-messages" style="display: none;"></div>
+            
+            <!-- 카테고리 필터 -->
+            <div class="category-filter">
+                <a href="#" class="category-btn active" data-category="">전체</a>
+                <a href="#" class="category-btn" data-category="일반">일반</a>
+                <a href="#" class="category-btn" data-category="주거용">주거용</a>
+                <a href="#" class="category-btn" data-category="상업용">상업용</a>
+                <a href="#" class="category-btn" data-category="천장형">천장형</a>
+                <a href="#" class="category-btn" data-category="스탠드형">스탠드형</a>
+                <a href="#" class="category-btn" data-category="시스템에어컨">시스템에어컨</a>
+            </div>
+            
+            <div id="photos-grid" class="photo-grid">
+                <!-- 사진들이 여기에 동적으로 로드됩니다 -->
+            </div>
+            
+            <div id="no-photos" class="no-photos" style="display: none;">
+                <i class="fas fa-images"></i>
+                <p>등록된 시공사진이 없습니다.</p>
+                <a href="upload_construction_photo.html" class="upload-btn">
+                    <i class="fas fa-upload"></i> 첫 번째 사진 업로드하기
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-left">
+                <img src="static/images/logo.png" alt="원피스공조 로고" class="footer-logo">
+            </div>
+            <div class="footer-center">
+                <h3>원피스공조</h3>
+                <p><i class="fas fa-user"></i> 대표: 신형욱</p>
+                <p><i class="fas fa-id-card"></i> 사업자등록번호: 119-20-74600</p>
+                <p><i class="fas fa-map-marker-alt"></i> 주소: 서울특별시 경인로35나길 3 1층</p>
+                <p><i class="fas fa-phone"></i> 전화: 010-9493-3854</p>
+                <p><i class="fas fa-envelope"></i> 이메일: isari242@naver.com</p>
+            </div>
+            <div class="footer-right">
+                <h3>소셜 미디어</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i> 인스타그램</a>
+                    <a href="#" class="social-link"><i class="fas fa-blog"></i> 블로그</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-links footer-links-bottom">
+            <a href="#privacy"><i class="fas fa-shield-alt"></i> 개인정보처리방침</a>
+            <a href="#terms"><i class="fas fa-file-contract"></i> 이용약관</a>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2012 원피스공조. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Supabase 클라이언트 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="static/construction_photos.js"></script>
+</body>
+</html> 

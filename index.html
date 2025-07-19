@@ -113,6 +113,7 @@
             <div class="construction-slider">
                 <div class="slider-container">
                     <div class="slider-track">
+                        <!-- 기본 이미지들 -->
                         <div class="slide"><img src="static/images/gallery1.jpg" alt="시공현장 1"></div>
                         <div class="slide"><img src="static/images/gallery2.jpg" alt="시공현장 2"></div>
                         <div class="slide"><img src="static/images/gallery3.jpg" alt="시공현장 3"></div>
@@ -132,6 +133,11 @@
                     <button class="prev-btn"><i class="fas fa-chevron-left"></i></button>
                     <button class="next-btn"><i class="fas fa-chevron-right"></i></button>
                 </div>
+            </div>
+            <div class="construction-more">
+                <a href="construction_photos.html" class="more-btn">
+                    <i class="fas fa-images"></i> 더 많은 시공사진 보기
+                </a>
             </div>
         </section>
 
@@ -332,5 +338,7 @@
     </div>
 
     <script src="static/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="static/construction_slider.js"></script>
 </body>
 </html> 
