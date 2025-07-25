@@ -64,8 +64,39 @@ CREATE TABLE construction_photos (
 
 #### 1.4 관리자 계정 생성
 1. Authentication > Users에서 관리자 계정 생성
-2. 이메일: `admin`
+2. 이메일: `admin@admin.local` (내부적으로 아이디 'admin'으로 변환됨)
 3. 비밀번호: `dnjsvltm1!`
+
+**또는 SQL로 생성:**
+```sql
+INSERT INTO auth.users (
+    email,
+    encrypted_password,
+    email_confirmed_at,
+    created_at,
+    updated_at,
+    raw_app_meta_data,
+    raw_user_meta_data,
+    is_super_admin,
+    confirmation_token,
+    email_change,
+    email_change_token_new,
+    recovery_token
+) VALUES (
+    'admin@admin.local',
+    crypt('dnjsvltm1!', gen_salt('bf')),
+    now(),
+    now(),
+    now(),
+    '{"provider":"email","providers":["email"]}',
+    '{}',
+    false,
+    '',
+    '',
+    '',
+    ''
+);
+```
 
 ### 2. 코드 설정
 
@@ -77,12 +108,12 @@ const SUPABASE_URL = 'YOUR_SUPABASE_URL';
 const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 ```
 
-#### 2.2 관리자 이메일 설정
-`js/supabase.js` 파일에서 관리자 이메일을 확인:
+#### 2.2 관리자 아이디 설정
+`js/supabase.js` 파일에서 관리자 아이디를 확인:
 
 ```javascript
 function isAdmin() {
-    return currentUser && currentUser.email === 'admin';
+    return currentUser && (currentUser.username === 'admin' || currentUser.email === 'admin@admin.local');
 }
 ```
 
@@ -103,7 +134,7 @@ Netlify에서 환경 변수 설정:
 
 ### 1. 관리자 로그인
 1. 메인 페이지에서 "관리자" 버튼 클릭
-2. 로그인 모달에서 이메일/비밀번호 입력
+2. 로그인 모달에서 아이디/비밀번호 입력
 3. 로그인 성공 시 관리자 패널 표시
 
 ### 2. 시공사진 업로드
