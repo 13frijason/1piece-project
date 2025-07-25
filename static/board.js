@@ -46,6 +46,47 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         loadEstimates();
     }
+    
+    // 로그인 상태 변경 감지 (localStorage 이벤트)
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'user') {
+            if (e.newValue) {
+                // 로그인된 경우
+                if (isAdmin()) {
+                    showAdminControls();
+                } else {
+                    hideAdminControls();
+                }
+            } else {
+                // 로그아웃된 경우
+                hideAdminControls();
+            }
+        }
+    });
+    
+    // 로그인 폼 이벤트 리스너 (board.html에 있는 경우)
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            // js/supabase.js의 loginUser 함수 호출
+            const result = await loginUser(username, password);
+            if (result.success) {
+                if (isAdmin()) {
+                    alert('관리자 모드로 로그인되었습니다!');
+                    showAdminControls();
+                } else {
+                    alert('로그인 성공!');
+                }
+            } else {
+                alert('로그인 실패: ' + result.error);
+            }
+        });
+    }
 });
 
 // 견적문의 목록 로드 함수

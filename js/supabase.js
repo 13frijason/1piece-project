@@ -131,6 +131,10 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (result.success) {
                 if (isAdmin()) {
                     alert('관리자 모드로 로그인되었습니다!');
+                    // 모든 페이지에서 관리자 컨트롤 표시
+                    if (typeof showAdminControls === 'function') {
+                        showAdminControls();
+                    }
                 } else {
                     alert('로그인 성공!');
                 }
