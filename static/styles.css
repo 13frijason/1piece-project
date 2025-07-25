@@ -135,6 +135,24 @@ header {
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
+/* 관리자 모드 버튼 스타일 */
+.admin-login-btn.admin-mode {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(40, 167, 69, 0.5);
+    }
+    100% {
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+}
+
 .admin-login-btn i {
     margin-right: 0.5rem;
 }

@@ -62,10 +62,17 @@ function updateUIForLoggedInUser() {
     const loginForm = document.getElementById('login-form');
     const adminPanel = document.getElementById('admin-panel');
     const logoutBtn = document.getElementById('logout-btn');
+    const adminLoginBtn = document.getElementById('admin-login-btn');
     
     if (loginForm) loginForm.style.display = 'none';
     if (adminPanel && isAdmin()) adminPanel.style.display = 'block';
     if (logoutBtn) logoutBtn.style.display = 'block';
+    
+    // 관리자 로그인 버튼 텍스트 변경
+    if (adminLoginBtn && isAdmin()) {
+        adminLoginBtn.innerHTML = '<i class="fas fa-user-shield"></i> 관리자 모드';
+        adminLoginBtn.classList.add('admin-mode');
+    }
     
     // 관리자 권한이 있는 경우 시공사진 관리 버튼 표시
     if (isAdmin()) {
@@ -77,10 +84,17 @@ function updateUIForLoggedOutUser() {
     const loginForm = document.getElementById('login-form');
     const adminPanel = document.getElementById('admin-panel');
     const logoutBtn = document.getElementById('logout-btn');
+    const adminLoginBtn = document.getElementById('admin-login-btn');
     
     if (loginForm) loginForm.style.display = 'block';
     if (adminPanel) adminPanel.style.display = 'none';
     if (logoutBtn) logoutBtn.style.display = 'none';
+    
+    // 관리자 로그인 버튼 텍스트 원래대로 복원
+    if (adminLoginBtn) {
+        adminLoginBtn.innerHTML = '<i class="fas fa-user-shield"></i> 관리자';
+        adminLoginBtn.classList.remove('admin-mode');
+    }
     
     hideAdminControls();
 }
@@ -116,7 +130,11 @@ document.addEventListener('DOMContentLoaded', async function() {
             
             const result = await loginUser(username, password);
             if (result.success) {
-                alert('로그인 성공!');
+                if (isAdmin()) {
+                    alert('관리자 모드로 로그인되었습니다!');
+                } else {
+                    alert('로그인 성공!');
+                }
             } else {
                 alert('로그인 실패: ' + result.error);
             }
@@ -202,7 +220,7 @@ function renderEstimates(estimates) {
     }
     
     const estimatesHTML = estimates.map(estimate => `
-        <div class="estimate-item">
+        <div class="estimate-item" data-id="${estimate.id}">
             <div class="estimate-header">
                 <h3>${estimate.name}</h3>
                 <span class="estimate-date">${new Date(estimate.created_at).toLocaleDateString('ko-KR')}</span>
@@ -273,6 +291,12 @@ async function deleteEstimate(id) {
                 alert('삭제에 실패했습니다.');
             } else {
                 alert('삭제되었습니다.');
+                // 삭제된 항목을 DOM에서 제거
+                const estimateItem = document.querySelector(`[data-id="${id}"]`);
+                if (estimateItem) {
+                    estimateItem.remove();
+                }
+                // 목록 다시 로드
                 const estimates = await loadEstimates();
                 renderEstimates(estimates);
             }
