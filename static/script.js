@@ -57,6 +57,58 @@ function sendMessage() {
     }
 }
 
+// 로그인 모달 기능
+const adminLoginBtn = document.getElementById('admin-login-btn');
+const loginModal = document.getElementById('login-modal');
+const closeLoginModalBtn = document.querySelector('#login-modal .close-modal');
+
+if (adminLoginBtn) {
+    adminLoginBtn.addEventListener('click', () => {
+        loginModal.style.display = 'block';
+    });
+}
+
+if (closeLoginModalBtn) {
+    closeLoginModalBtn.addEventListener('click', () => {
+        loginModal.style.display = 'none';
+    });
+}
+
+// 모달 외부 클릭 시 닫기
+window.addEventListener('click', (e) => {
+    if (e.target === loginModal) {
+        loginModal.style.display = 'none';
+    }
+});
+
+// 관리자 기능 함수들
+function openConstructionUpload() {
+    if (!isAdmin()) {
+        alert('관리자만 접근할 수 있습니다.');
+        return;
+    }
+    // 시공사진 업로드 페이지로 이동
+    window.location.href = 'upload_construction_photo.html';
+}
+
+function openEstimateManagement() {
+    if (!isAdmin()) {
+        alert('관리자만 접근할 수 있습니다.');
+        return;
+    }
+    // 견적문의 관리 페이지로 이동
+    window.location.href = 'board.html';
+}
+
+function openSiteSettings() {
+    if (!isAdmin()) {
+        alert('관리자만 접근할 수 있습니다.');
+        return;
+    }
+    // 사이트 설정 페이지 (향후 구현)
+    alert('사이트 설정 기능은 준비 중입니다.');
+}
+
 // 네비게이션 바 스크롤 효과
 window.addEventListener('scroll', function() {
     const header = document.querySelector('header');
@@ -71,10 +123,12 @@ window.addEventListener('scroll', function() {
 const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
 const navLinks = document.querySelector('.nav-links');
 
-mobileMenuBtn.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-    mobileMenuBtn.classList.toggle('active');
-});
+if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        mobileMenuBtn.classList.toggle('active');
+    });
+}
 
 // 모바일 메뉴 링크 클릭 시 메뉴 닫기
 const navLinksItems = document.querySelectorAll('.nav-links a');
@@ -98,26 +152,16 @@ document.querySelectorAll('.nav-links a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const targetId = this.getAttribute('href');
-        const targetSection = document.querySelector(targetId);
+        const targetElement = document.querySelector(targetId);
         
-        if (targetSection) {
-            // 홈(#hero) 클릭 시는 맨 위로 이동
-            if (targetId === '#hero') {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            } else {
-                const headerHeight = document.querySelector('header').offsetHeight;
-                let targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-            }
-            // 모바일 메뉴 닫기
-            navLinks.classList.remove('active');
-            mobileMenuBtn.classList.remove('active');
+        if (targetElement) {
+            const headerHeight = document.querySelector('header').offsetHeight;
+            const targetPosition = targetElement.offsetTop - headerHeight;
+            
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
         }
     });
 });

@@ -4,18 +4,156 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// 페이지 로드 시 이벤트 리스너 설정
-document.addEventListener('DOMContentLoaded', function() {
-    setupFormHandlers();
-    setupImagePreview();
+// 로그인 상태 관리
+let currentUser = null;
+
+// 사용자 권한 확인 함수
+function isAdmin() {
+    return currentUser && currentUser.email === 'admin@onepiece.com';
+}
+
+// UI 업데이트 함수들
+function updateUIForLoggedInUser() {
+    const accessDenied = document.getElementById('access-denied');
+    const adminUploadForm = document.getElementById('admin-upload-form');
+    
+    if (accessDenied) accessDenied.style.display = 'none';
+    if (adminUploadForm && isAdmin()) adminUploadForm.style.display = 'block';
+}
+
+function updateUIForLoggedOutUser() {
+    const accessDenied = document.getElementById('access-denied');
+    const adminUploadForm = document.getElementById('admin-upload-form');
+    
+    if (accessDenied) accessDenied.style.display = 'block';
+    if (adminUploadForm) adminUploadForm.style.display = 'none';
+}
+
+// 페이지 로드 시 로그인 상태 확인
+document.addEventListener('DOMContentLoaded', async function() {
+    // 저장된 사용자 정보 확인
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        updateUIForLoggedInUser();
+    } else {
+        updateUIForLoggedOutUser();
+    }
+    
+    // 관리자 권한이 있는 경우에만 폼 핸들러 설정
+    if (isAdmin()) {
+        setupFormHandlers();
+        setupImagePreview();
+    }
+    
+    // 로그인 폼 이벤트 리스너
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            const result = await loginUser(email, password);
+            if (result.success) {
+                alert('로그인 성공!');
+                updateUIForLoggedInUser();
+                setupFormHandlers();
+                setupImagePreview();
+            } else {
+                alert('로그인 실패: ' + result.error);
+            }
+        });
+    }
+    
+    // 로그아웃 버튼 이벤트 리스너
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async function() {
+            const result = await logoutUser();
+            if (result.success) {
+                alert('로그아웃 되었습니다.');
+                updateUIForLoggedOutUser();
+            }
+        });
+    }
+    
+    // 관리자 로그인 버튼 이벤트 리스너
+    const adminLoginBtn = document.getElementById('admin-login-btn');
+    const loginModal = document.getElementById('login-modal');
+    const closeLoginModalBtn = document.querySelector('#login-modal .close-modal');
+    
+    if (adminLoginBtn) {
+        adminLoginBtn.addEventListener('click', () => {
+            if (loginModal) loginModal.style.display = 'block';
+        });
+    }
+    
+    if (closeLoginModalBtn) {
+        closeLoginModalBtn.addEventListener('click', () => {
+            if (loginModal) loginModal.style.display = 'none';
+        });
+    }
+    
+    // 모달 외부 클릭 시 닫기
+    window.addEventListener('click', (e) => {
+        if (e.target === loginModal) {
+            loginModal.style.display = 'none';
+        }
+    });
 });
+
+// 로그인 함수
+async function loginUser(email, password) {
+    try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+        
+        if (error) {
+            throw error;
+        }
+        
+        currentUser = data.user;
+        localStorage.setItem('user', JSON.stringify(data.user));
+        return { success: true, user: data.user };
+    } catch (error) {
+        console.error('Login error:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+// 로그아웃 함수
+async function logoutUser() {
+    try {
+        const { error } = await supabaseClient.auth.signOut();
+        if (error) throw error;
+        
+        currentUser = null;
+        localStorage.removeItem('user');
+        return { success: true };
+    } catch (error) {
+        console.error('Logout error:', error);
+        return { success: false, error: error.message };
+    }
+}
 
 // 폼 핸들러 설정
 function setupFormHandlers() {
     const uploadForm = document.getElementById('upload-form');
     
+    if (!uploadForm) return;
+    
     uploadForm.addEventListener('submit', async function(e) {
         e.preventDefault();
+        
+        // 관리자 권한 재확인
+        if (!isAdmin()) {
+            showMessage('관리자만 업로드할 수 있습니다.', 'error');
+            return;
+        }
         
         const formData = new FormData(uploadForm);
         const title = formData.get('title');
@@ -36,6 +174,8 @@ function setupFormHandlers() {
 function setupImagePreview() {
     const photoInput = document.getElementById('photo');
     const previewDiv = document.getElementById('upload-preview');
+    
+    if (!photoInput || !previewDiv) return;
     
     photoInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
@@ -134,6 +274,8 @@ async function uploadPhoto(title, description, photoFile) {
 // 메시지 표시 함수
 function showMessage(message, type = 'success') {
     const flashMessages = document.getElementById('flash-messages');
+    if (!flashMessages) return;
+    
     flashMessages.innerHTML = `
         <div class="flash-message flash-${type}">
             ${message}

@@ -11,7 +11,7 @@
         .upload-container {
             max-width: 600px;
             margin: 120px auto 50px;
-            padding: 0 20px;
+            padding: 0;
         }
 
         .upload-header {
@@ -98,52 +98,33 @@
         .submit-btn:hover {
             background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);
             transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
         }
 
         .cancel-btn {
             padding: 1rem 2rem;
-            background: #6c757d;
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
             color: white;
-            text-decoration: none;
+            border: none;
             border-radius: 50px;
             font-weight: 500;
             font-size: 1.1rem;
+            cursor: pointer;
             transition: all 0.3s ease;
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
         }
 
         .cancel-btn:hover {
-            background: #5a6268;
+            background: linear-gradient(135deg, #495057 0%, #343a40 100%);
             transform: translateY(-2px);
-        }
-
-        .flash-messages {
-            margin-bottom: 2rem;
-        }
-
-        .flash-message {
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            font-weight: 500;
-        }
-
-        .flash-message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .flash-message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
         }
 
         .upload-preview {
-            margin-top: 1rem;
+            margin: 1rem 0;
             text-align: center;
         }
 
@@ -154,23 +135,92 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
+        .flash-messages {
+            margin-bottom: 1rem;
+        }
+
+        .flash-message {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .flash-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .flash-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* 관리자 접근 제한 스타일 */
+        .admin-only {
+            display: none;
+        }
+
+        .access-denied {
+            text-align: center;
+            padding: 3rem;
+            color: #721c24;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .access-denied i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #dc3545;
+        }
+
+        .access-denied h2 {
+            margin-bottom: 1rem;
+            color: #721c24;
+        }
+
+        .access-denied p {
+            margin-bottom: 1.5rem;
+            color: #721c24;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
         @media (max-width: 768px) {
             .upload-container {
-                padding: 0 1rem;
+                margin: 100px auto 30px;
+                padding: 0 20px;
             }
-            
+
             .upload-title {
                 font-size: 1.5rem;
             }
-            
-            .upload-form-container {
-                padding: 1.5rem;
-            }
-            
+
             .form-actions {
                 flex-direction: column;
+                gap: 0.5rem;
             }
-            
+
             .submit-btn,
             .cancel-btn {
                 width: 100%;
@@ -188,70 +238,138 @@
                 </h1>
             </div>
             <ul class="nav-links">
-                <li><a href="index.html">홈</a></li>
+                <li><a href="index.html#hero">홈</a></li>
                 <li><a href="index.html#services">서비스</a></li>
                 <li><a href="index.html#construction-site">시공사진</a></li>
                 <li><a href="index.html#about">회사소개</a></li>
                 <li><a href="index.html#quote">견적문의</a></li>
                 <li><a href="index.html#contact">Contact</a></li>
             </ul>
+            <div class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </nav>
     </header>
 
-    <div class="upload-container">
-        <div class="upload-header">
-            <h1 class="upload-title"><i class="fas fa-upload"></i> 시공사진 업로드</h1>
-            <p class="upload-subtitle">시공현장 사진을 업로드하여 메인 페이지에 표시하세요</p>
-        </div>
-
-        <div id="flash-messages" class="flash-messages" style="display: none;"></div>
-
-        <div class="upload-form-container">
-            <form id="upload-form" class="upload-form">
-                <div class="form-group">
-                    <label for="title">사진 제목 *</label>
-                    <input type="text" id="title" name="title" required placeholder="예: 주거용 시스템에어컨 설치">
-                </div>
-
-                <div class="form-group">
-                    <label for="description">설명</label>
-                    <textarea id="description" name="description" rows="4" placeholder="사진에 대한 설명을 입력하세요"></textarea>
-                </div>
-
-                <!-- 카테고리 선택 (나중에 카테고리 필터 활성화 시 사용) -->
-                <!--
-                <div class="form-group">
-                    <label for="category">카테고리</label>
-                    <select id="category" name="category">
-                        <option value="일반">일반</option>
-                        <option value="주거용">주거용</option>
-                        <option value="상업용">상업용</option>
-                        <option value="천장형">천장형</option>
-                        <option value="스탠드형">스탠드형</option>
-                        <option value="시스템에어컨">시스템에어컨</option>
-                    </select>
-                </div>
-                -->
-
-                <div class="form-group">
-                    <label for="photo">사진 파일 *</label>
-                    <input type="file" id="photo" name="photo" accept="image/*" required>
-                    <small class="file-info">지원 형식: JPG, PNG, GIF (최대 16MB)</small>
-                </div>
-
-                <div id="upload-preview" class="upload-preview" style="display: none;">
-                    <!-- 이미지 미리보기가 여기에 표시됩니다 -->
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit" class="submit-btn">
-                        <i class="fas fa-upload"></i> 업로드
+    <!-- 로그인 모달 -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-lock"></i> 관리자 로그인</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">이메일</label>
+                        <input type="email" id="login-email" required placeholder="admin">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">비밀번호</label>
+                        <input type="password" id="login-password" required placeholder="비밀번호를 입력하세요">
+                    </div>
+                    <button type="submit" class="login-button">
+                        <i class="fas fa-sign-in-alt"></i> 로그인
                     </button>
-                    <a href="construction_photos.html" class="cancel-btn">
-                        <i class="fas fa-times"></i> 취소
-                    </a>
-                </div>
-            </form>
+                </form>
+                <button id="logout-btn" class="logout-button" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i> 로그아웃
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 관리자 패널 -->
+    <div id="admin-panel" class="admin-panel" style="display: none;">
+        <div class="admin-panel-content">
+            <h3><i class="fas fa-crown"></i> 관리자 패널</h3>
+            <div class="admin-buttons">
+                <button onclick="openConstructionUpload()" class="admin-btn">
+                    <i class="fas fa-upload"></i> 시공사진 업로드
+                </button>
+                <button onclick="openEstimateManagement()" class="admin-btn">
+                    <i class="fas fa-list"></i> 견적문의 관리
+                </button>
+                <button onclick="openSiteSettings()" class="admin-btn">
+                    <i class="fas fa-cog"></i> 사이트 설정
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 관리자 접근 제한 메시지 -->
+    <div id="access-denied" class="access-denied" style="display: none;">
+        <i class="fas fa-lock"></i>
+        <h2>접근 권한이 없습니다</h2>
+        <p>시공사진 업로드는 관리자만 가능합니다.</p>
+        <p>관리자 계정으로 로그인 후 이용해주세요.</p>
+        <button id="admin-login-btn" class="admin-login-btn">
+            <i class="fas fa-user-shield"></i> 관리자 로그인
+        </button>
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-home"></i> 홈으로 돌아가기
+        </a>
+    </div>
+
+    <!-- 관리자 전용 업로드 폼 -->
+    <div id="admin-upload-form" class="admin-only">
+        <div class="upload-container">
+            <div class="upload-header">
+                <h1 class="upload-title"><i class="fas fa-upload"></i> 시공사진 업로드</h1>
+                <p class="upload-subtitle">시공현장 사진을 업로드하여 메인 페이지에 표시하세요</p>
+            </div>
+
+            <div id="flash-messages" class="flash-messages" style="display: none;"></div>
+
+            <div class="upload-form-container">
+                <form id="upload-form" class="upload-form">
+                    <div class="form-group">
+                        <label for="title">사진 제목 *</label>
+                        <input type="text" id="title" name="title" required placeholder="예: 주거용 시스템에어컨 설치">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">설명</label>
+                        <textarea id="description" name="description" rows="4" placeholder="사진에 대한 설명을 입력하세요"></textarea>
+                    </div>
+
+                    <!-- 카테고리 선택 (나중에 카테고리 필터 활성화 시 사용) -->
+                    <!--
+                    <div class="form-group">
+                        <label for="category">카테고리</label>
+                        <select id="category" name="category">
+                            <option value="일반">일반</option>
+                            <option value="주거용">주거용</option>
+                            <option value="상업용">상업용</option>
+                            <option value="천장형">천장형</option>
+                            <option value="스탠드형">스탠드형</option>
+                            <option value="시스템에어컨">시스템에어컨</option>
+                        </select>
+                    </div>
+                    -->
+
+                    <div class="form-group">
+                        <label for="photo">사진 파일 *</label>
+                        <input type="file" id="photo" name="photo" accept="image/*" required>
+                        <small class="file-info">지원 형식: JPG, PNG, GIF (최대 16MB)</small>
+                    </div>
+
+                    <div id="upload-preview" class="upload-preview" style="display: none;">
+                        <!-- 이미지 미리보기가 여기에 표시됩니다 -->
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-upload"></i> 업로드
+                        </button>
+                        <a href="construction_photos.html" class="cancel-btn">
+                            <i class="fas fa-times"></i> 취소
+                        </a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -288,5 +406,6 @@
     <!-- Supabase 클라이언트 라이브러리 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="static/upload_construction_photo.js"></script>
+    <script src="js/supabase.js"></script>
 </body>
 </html> 
