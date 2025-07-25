@@ -81,6 +81,26 @@ window.addEventListener('click', (e) => {
     }
 });
 
+// 관리자 권한 확인 함수
+function isAdmin() {
+    const savedUser = localStorage.getItem('user');
+    if (!savedUser) return false;
+    
+    const currentUser = JSON.parse(savedUser);
+    return currentUser && (currentUser.username === 'admin' || currentUser.email === 'admin@admin.local');
+}
+
+// 관리자 컨트롤 표시/숨김 함수
+function showAdminControls() {
+    const adminButtons = document.querySelectorAll('.admin-only');
+    adminButtons.forEach(btn => btn.style.display = 'inline-block');
+}
+
+function hideAdminControls() {
+    const adminButtons = document.querySelectorAll('.admin-only');
+    adminButtons.forEach(btn => btn.style.display = 'none');
+}
+
 // 관리자 기능 함수들
 function openConstructionUpload() {
     if (!isAdmin()) {
@@ -423,6 +443,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 페이지별 기능 초기화
 document.addEventListener('DOMContentLoaded', function() {
+    // 관리자 권한 확인 및 컨트롤 표시
+    if (isAdmin()) {
+        showAdminControls();
+    } else {
+        hideAdminControls();
+    }
+    
     // 현재 페이지 URL 확인
     const currentPage = window.location.pathname;
     

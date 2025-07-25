@@ -4,8 +4,35 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// 관리자 권한 확인 함수
+function isAdmin() {
+    const savedUser = localStorage.getItem('user');
+    if (!savedUser) return false;
+    
+    const currentUser = JSON.parse(savedUser);
+    return currentUser && (currentUser.username === 'admin' || currentUser.email === 'admin@admin.local');
+}
+
+// 관리자 컨트롤 표시/숨김 함수
+function showAdminControls() {
+    const adminButtons = document.querySelectorAll('.admin-only');
+    adminButtons.forEach(btn => btn.style.display = 'inline-block');
+}
+
+function hideAdminControls() {
+    const adminButtons = document.querySelectorAll('.admin-only');
+    adminButtons.forEach(btn => btn.style.display = 'none');
+}
+
 // 페이지 로드 시 견적문의 목록 로드
 document.addEventListener('DOMContentLoaded', function() {
+    // 관리자 권한 확인 및 컨트롤 표시
+    if (isAdmin()) {
+        showAdminControls();
+    } else {
+        hideAdminControls();
+    }
+    
     // URL 파라미터 확인
     const urlParams = new URLSearchParams(window.location.search);
     const customerName = urlParams.get('customer-name');
@@ -72,7 +99,7 @@ function displayEstimates(estimates) {
             </div>
             <div class="estimate-actions">
                 <a href="view_estimate.html?id=${estimate.id}" class="view-button">상세보기</a>
-                <button onclick="deleteEstimate(${estimate.id})" class="delete-button">
+                <button onclick="deleteEstimate(${estimate.id})" class="delete-button admin-only">
                     <i class="fas fa-trash"></i> 삭제
                 </button>
             </div>
@@ -156,6 +183,11 @@ async function createEstimateFromForm(customerName, customerPhone, serviceType, 
 
 // 견적문의 삭제 함수
 async function deleteEstimate(id) {
+    if (!isAdmin()) {
+        alert('관리자만 삭제할 수 있습니다.');
+        return;
+    }
+    
     if (!confirm('정말 삭제하시겠습니까?')) {
         return;
     }

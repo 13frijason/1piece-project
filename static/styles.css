@@ -84,6 +84,28 @@ header {
     width: 100%;
 }
 
+/* 네비게이션 오른쪽 영역 */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+}
+
+.nav-logo-img {
+    height: 60px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.nav-logo-img:hover {
+    transform: scale(1.05);
+}
+
 /* 드롭다운 메뉴 */
 .dropdown {
     position: relative;
@@ -981,6 +1003,10 @@ footer {
         font-size: 1.2rem;
     }
 
+    .nav-logo-img {
+        height: 50px;
+    }
+
     .nav-links {
         display: none;
         position: absolute;
@@ -1085,6 +1111,10 @@ footer {
     section {
         padding: 4rem 0;
         text-align: center;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        margin: 0 !important;
+        overflow-x: hidden !important;
     }
 
     section h2 {
@@ -1316,12 +1346,20 @@ footer {
         font-size: 1.1rem;
     }
 
+    .nav-logo-img {
+        height: 40px;
+    }
+
     .main-nav {
         padding: 0.8rem 3%;
     }
 
     section {
         padding: 3rem 0.8rem;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        margin: 0 !important;
+        overflow-x: hidden !important;
     }
 
     section h2 {
@@ -3026,11 +3064,11 @@ footer {
     gap: 0.2rem;
   }
   main, section, .service-grid, .about-container, .quote-container, .contact-container {
-    width: 100% !important;
-    max-width: 100% !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
     margin: 0 !important;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     box-sizing: border-box !important;
     overflow-x: hidden !important;
   }
@@ -3066,7 +3104,7 @@ footer {
     gap: 2rem !important;
     max-width: 100vw !important;
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 0 1rem !important;
   }
 } 
 

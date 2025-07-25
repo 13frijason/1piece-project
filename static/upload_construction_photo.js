@@ -9,7 +9,7 @@ let currentUser = null;
 
 // 사용자 권한 확인 함수
 function isAdmin() {
-    return currentUser && currentUser.email === 'admin@onepiece.com';
+    return currentUser && (currentUser.username === 'admin' || currentUser.email === 'admin@admin.local');
 }
 
 // UI 업데이트 함수들
@@ -52,12 +52,16 @@ document.addEventListener('DOMContentLoaded', async function() {
         loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const email = document.getElementById('login-email').value;
+            const username = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             
-            const result = await loginUser(email, password);
+            const result = await loginUser(username, password);
             if (result.success) {
-                alert('로그인 성공!');
+                if (isAdmin()) {
+                    alert('관리자 모드로 로그인되었습니다!');
+                } else {
+                    alert('로그인 성공!');
+                }
                 updateUIForLoggedInUser();
                 setupFormHandlers();
                 setupImagePreview();
@@ -104,9 +108,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
 });
 
-// 로그인 함수
-async function loginUser(email, password) {
+// 로그인 함수 (아이디 기반)
+async function loginUser(username, password) {
     try {
+        // 아이디를 이메일 형식으로 변환 (Supabase는 이메일을 요구함)
+        const email = username + '@admin.local';
+        
         const { data, error } = await supabaseClient.auth.signInWithPassword({
             email: email,
             password: password
@@ -117,8 +124,10 @@ async function loginUser(email, password) {
         }
         
         currentUser = data.user;
-        localStorage.setItem('user', JSON.stringify(data.user));
-        return { success: true, user: data.user };
+        // 사용자 정보에 아이디 추가
+        currentUser.username = username;
+        localStorage.setItem('user', JSON.stringify(currentUser));
+        return { success: true, user: currentUser };
     } catch (error) {
         console.error('Login error:', error);
         return { success: false, error: error.message };
