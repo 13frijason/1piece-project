@@ -306,7 +306,7 @@
                 <p class="board-subtitle">원피스공조의 다양한 시공현장 사진들을 확인하세요</p>
             </div>
             <div class="board-actions">
-                <a href="upload_construction_photo.html" class="upload-btn">
+                <a href="admin-login.html" id="admin-upload-btn" class="upload-btn" style="display: none;">
                     <i class="fas fa-upload"></i>
                     사진 업로드
                 </a>
@@ -336,7 +336,7 @@
             <div id="no-photos" class="no-photos" style="display: none;">
                 <i class="fas fa-images"></i>
                 <p>등록된 시공사진이 없습니다.</p>
-                <a href="upload_construction_photo.html" class="upload-btn">
+                <a href="admin-login.html" id="admin-upload-btn-empty" class="upload-btn" style="display: none;">
                     <i class="fas fa-upload"></i> 첫 번째 사진 업로드하기
                 </a>
             </div>
@@ -376,5 +376,46 @@
     <!-- Supabase 클라이언트 라이브러리 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="static/construction_photos.js"></script>
+    
+    <script>
+        // 관리자 인증 확인
+        function checkAdminAuth() {
+            const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+            const adminInfo = JSON.parse(localStorage.getItem('adminInfo') || '{}');
+            
+            const adminUploadBtn = document.getElementById('admin-upload-btn');
+            const adminUploadBtnEmpty = document.getElementById('admin-upload-btn-empty');
+            
+            if (adminLoggedIn && adminInfo.username === 'admin') {
+                // 관리자 로그인된 경우 업로드 버튼 표시
+                if (adminUploadBtn) {
+                    adminUploadBtn.style.display = 'inline-flex';
+                    adminUploadBtn.href = 'upload_construction_photo.html';
+                }
+                if (adminUploadBtnEmpty) {
+                    adminUploadBtnEmpty.style.display = 'inline-flex';
+                    adminUploadBtnEmpty.href = 'upload_construction_photo.html';
+                }
+            } else {
+                // 관리자 로그인되지 않은 경우 업로드 버튼 숨김
+                if (adminUploadBtn) {
+                    adminUploadBtn.style.display = 'none';
+                }
+                if (adminUploadBtnEmpty) {
+                    adminUploadBtnEmpty.style.display = 'none';
+                }
+            }
+        }
+        
+        // 페이지 로드 시 관리자 인증 확인
+        window.addEventListener('load', checkAdminAuth);
+        
+        // 로컬 스토리지 변경 감지
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'adminLoggedIn' || e.key === 'adminInfo') {
+                checkAdminAuth();
+            }
+        });
+    </script>
 </body>
 </html> 

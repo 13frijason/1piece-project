@@ -319,6 +319,9 @@
             <div class="upload-header">
                 <h1 class="upload-title"><i class="fas fa-upload"></i> 시공사진 업로드</h1>
                 <p class="upload-subtitle">시공현장 사진을 업로드하여 메인 페이지에 표시하세요</p>
+                <button onclick="logout()" class="logout-btn" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                    <i class="fas fa-sign-out-alt"></i> 로그아웃
+                </button>
             </div>
 
             <div id="flash-messages" class="flash-messages" style="display: none;"></div>
@@ -407,5 +410,37 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="static/upload_construction_photo.js"></script>
     <script src="js/supabase.js"></script>
+    
+    <script>
+        // 관리자 인증 확인
+        function checkAdminAuth() {
+            const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+            const adminInfo = JSON.parse(localStorage.getItem('adminInfo') || '{}');
+            
+            if (!adminLoggedIn || adminInfo.username !== 'admin') {
+                // 관리자 로그인되지 않은 경우 로그인 페이지로 리다이렉트
+                alert('관리자 로그인이 필요합니다.');
+                window.location.href = 'admin-login.html';
+                return;
+            }
+            
+            // 관리자 로그인된 경우 업로드 폼 표시
+            const adminUploadForm = document.getElementById('admin-upload-form');
+            if (adminUploadForm) {
+                adminUploadForm.style.display = 'block';
+            }
+        }
+        
+        // 로그아웃 함수
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            localStorage.removeItem('adminInfo');
+            alert('로그아웃되었습니다.');
+            window.location.href = 'index.html';
+        }
+        
+        // 페이지 로드 시 관리자 인증 확인
+        window.addEventListener('load', checkAdminAuth);
+    </script>
 </body>
 </html> 
