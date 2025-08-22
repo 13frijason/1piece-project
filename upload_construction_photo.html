@@ -355,6 +355,25 @@
     <script src="static/upload_construction_photo.js"></script>
     
     <script>
+        // 추가 디버깅을 위한 스크립트
+        console.log('HTML 스크립트 로드됨');
+        
+        // Supabase가 로드되었는지 확인
+        if (typeof window.supabase !== 'undefined') {
+            console.log('Supabase 라이브러리 로드됨');
+        } else {
+            console.error('Supabase 라이브러리가 로드되지 않음');
+        }
+        
+        // 업로드 스크립트가 로드되었는지 확인
+        if (typeof uploadPhoto !== 'undefined') {
+            console.log('업로드 함수 로드됨');
+        } else {
+            console.error('업로드 함수가 로드되지 않음');
+        }
+    </script>
+    
+    <script>
         // 관리자 인증 확인
         function checkAdminAuth() {
             const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
