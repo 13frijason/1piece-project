@@ -59,6 +59,11 @@ async function loadConstructionPhotos() {
 function displayPhotos(photos) {
     const photosGrid = document.getElementById('photos-grid');
     const noPhotos = document.getElementById('no-photos');
+    
+    // 관리자 로그인 상태 확인
+    const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+    const adminInfo = JSON.parse(localStorage.getItem('adminInfo') || '{}');
+    const isAdmin = adminLoggedIn && adminInfo.username === 'admin';
 
     if (!photos || photos.length === 0) {
         photosGrid.style.display = 'none';
@@ -73,6 +78,7 @@ function displayPhotos(photos) {
         <div class="photo-card" data-id="${photo.id}">
             <div class="photo-image">
                 <img src="${photo.image_url}" alt="${photo.title}">
+                ${isAdmin ? `
                 <div class="photo-overlay">
                     <div class="photo-actions">
                         <button onclick="togglePhotoStatus(${photo.id}, ${photo.is_active})" class="action-btn ${photo.is_active ? 'active' : 'inactive'}">
@@ -84,6 +90,7 @@ function displayPhotos(photos) {
                         </button>
                     </div>
                 </div>
+                ` : ''}
             </div>
             <div class="photo-info">
                 <h3>${photo.title}</h3>
