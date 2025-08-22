@@ -1,3 +1,10 @@
+// Supabase 설정
+const SUPABASE_URL = 'https://jykkpfrpnpkycqyokqnm.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5a2twZnJwbnBreWNxeW9rcW5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3MTY1NjgsImV4cCI6MjA2ODI5MjU2OH0.vMXLe-ccOQXuH2I6M-9WIYJcxoCMQygh5ldBGdd3jzk';
+
+// Supabase 클라이언트 생성
+let supabaseClient;
+
 // 관리자 권한 확인 함수
 function isAdmin() {
     const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
@@ -8,6 +15,15 @@ function isAdmin() {
 // 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM 로드됨');
+    
+    // Supabase 클라이언트 초기화
+    try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        console.log('Supabase 클라이언트 초기화 성공');
+    } catch (error) {
+        console.error('Supabase 클라이언트 초기화 실패:', error);
+        return;
+    }
     
     // 관리자 권한이 있는 경우에만 폼 핸들러 설정
     if (isAdmin()) {
@@ -115,7 +131,7 @@ async function uploadPhoto(title, description, photoFile) {
             console.log('생성된 파일명:', fileName);
             
             // Supabase Storage에 파일 업로드
-            const { data: uploadData, error: uploadError } = await supabase.storage
+            const { data: uploadData, error: uploadError } = await supabaseClient.storage
                 .from('construction-photos')
                 .upload(fileName, photoFile);
             
@@ -127,7 +143,7 @@ async function uploadPhoto(title, description, photoFile) {
             console.log('파일 업로드 성공:', uploadData);
             
             // 업로드된 파일의 공개 URL 가져오기
-            const { data: urlData } = supabase.storage
+            const { data: urlData } = supabaseClient.storage
                 .from('construction-photos')
                 .getPublicUrl(fileName);
             
@@ -144,7 +160,7 @@ async function uploadPhoto(title, description, photoFile) {
             
             console.log('저장할 데이터:', photoData);
             
-            const { data: insertData, error: insertError } = await supabase
+            const { data: insertData, error: insertError } = await supabaseClient
                 .from('construction_photos')
                 .insert([photoData]);
             
