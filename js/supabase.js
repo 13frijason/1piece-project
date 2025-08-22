@@ -3,7 +3,25 @@ const SUPABASE_URL = 'https://jykkpfrpnpkycqyokqnm.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5a2twZnJwbnBreWNxeW9rcW5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3MTY1NjgsImV4cCI6MjA2ODI5MjU2OH0.vMXLe-ccOQXuH2I6M-9WIYJcxoCMQygh5ldBGdd3jzk';
 
 // Supabase 클라이언트 생성
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let supabase;
+try {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch (error) {
+    console.error('Supabase 클라이언트 생성 실패:', error);
+    // 폴백: 기본 fetch 사용
+    supabase = {
+        from: (table) => ({
+            select: () => Promise.resolve({ data: [], error: null }),
+            insert: () => Promise.resolve({ data: null, error: new Error('Supabase 연결 실패') }),
+            update: () => Promise.resolve({ data: null, error: new Error('Supabase 연결 실패') }),
+            delete: () => Promise.resolve({ data: null, error: new Error('Supabase 연결 실패') })
+        }),
+        auth: {
+            signInWithPassword: () => Promise.resolve({ data: null, error: new Error('Supabase 연결 실패') }),
+            signOut: () => Promise.resolve({ error: new Error('Supabase 연결 실패') })
+        }
+    };
+}
 
 // 로그인 상태 관리
 let currentUser = null;
