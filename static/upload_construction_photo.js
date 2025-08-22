@@ -115,7 +115,7 @@ async function uploadPhoto(title, description, photoFile) {
             console.log('생성된 파일명:', fileName);
             
             // Supabase Storage에 파일 업로드
-            const { data: uploadData, error: uploadError } = await window.supabase.storage
+            const { data: uploadData, error: uploadError } = await supabase.storage
                 .from('construction-photos')
                 .upload(fileName, photoFile);
             
@@ -127,7 +127,7 @@ async function uploadPhoto(title, description, photoFile) {
             console.log('파일 업로드 성공:', uploadData);
             
             // 업로드된 파일의 공개 URL 가져오기
-            const { data: urlData } = window.supabase.storage
+            const { data: urlData } = supabase.storage
                 .from('construction-photos')
                 .getPublicUrl(fileName);
             
@@ -144,7 +144,7 @@ async function uploadPhoto(title, description, photoFile) {
             
             console.log('저장할 데이터:', photoData);
             
-            const { data: insertData, error: insertError } = await window.supabase
+            const { data: insertData, error: insertError } = await supabase
                 .from('construction_photos')
                 .insert([photoData]);
             
