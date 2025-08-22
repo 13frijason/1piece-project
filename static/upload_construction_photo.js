@@ -2,7 +2,7 @@
 const SUPABASE_URL = 'https://jykkpfrpnpkycqyokqnm.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5a2twZnJwbnBreWNxeW9rcW5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3MTY1NjgsImV4cCI6MjA2ODI5MjU2OH0.vMXLe-ccOQXuH2I6M-9WIYJcxoCMQygh5ldBGdd3jzk';
 
-// Supabase 클라이언트 초기화 (js/supabase.js에서 가져온 설정 사용)
+// Supabase 클라이언트 초기화
 let supabaseClient;
 try {
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -14,154 +14,31 @@ try {
             select: () => Promise.resolve({ data: [], error: null }),
             insert: () => Promise.resolve({ data: null, error: 'Supabase 연결 실패' }),
             delete: () => Promise.resolve({ data: null, error: 'Supabase 연결 실패' })
-        })
+        }),
+        storage: {
+            from: () => ({
+                upload: () => Promise.resolve({ data: null, error: 'Supabase Storage 연결 실패' }),
+                getPublicUrl: () => ({ data: { publicUrl: '' } })
+            })
+        }
     };
 }
 
-// 로그인 상태 관리
-let currentUser = null;
-
-// 사용자 권한 확인 함수
+// 관리자 권한 확인 함수
 function isAdmin() {
-    return currentUser && (currentUser.username === 'admin' || currentUser.email === 'admin@admin.local');
+    const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+    const adminInfo = JSON.parse(localStorage.getItem('adminInfo') || '{}');
+    return adminLoggedIn && adminInfo.username === 'admin';
 }
 
-// UI 업데이트 함수들
-function updateUIForLoggedInUser() {
-    const accessDenied = document.getElementById('access-denied');
-    const adminUploadForm = document.getElementById('admin-upload-form');
-    
-    if (accessDenied) accessDenied.style.display = 'none';
-    if (adminUploadForm && isAdmin()) adminUploadForm.style.display = 'block';
-}
-
-function updateUIForLoggedOutUser() {
-    const accessDenied = document.getElementById('access-denied');
-    const adminUploadForm = document.getElementById('admin-upload-form');
-    
-    if (accessDenied) accessDenied.style.display = 'block';
-    if (adminUploadForm) adminUploadForm.style.display = 'none';
-}
-
-// 페이지 로드 시 로그인 상태 확인
-document.addEventListener('DOMContentLoaded', async function() {
-    // 저장된 사용자 정보 확인
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-        updateUIForLoggedInUser();
-    } else {
-        updateUIForLoggedOutUser();
-    }
-    
+// 페이지 로드 시 초기화
+document.addEventListener('DOMContentLoaded', function() {
     // 관리자 권한이 있는 경우에만 폼 핸들러 설정
     if (isAdmin()) {
         setupFormHandlers();
         setupImagePreview();
     }
-    
-    // 로그인 폼 이벤트 리스너
-    const loginForm = document.getElementById('login-form');
-    if (loginForm) {
-        loginForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            
-            const result = await loginUser(username, password);
-            if (result.success) {
-                if (isAdmin()) {
-                    alert('관리자 모드로 로그인되었습니다!');
-                } else {
-                    alert('로그인 성공!');
-                }
-                updateUIForLoggedInUser();
-                setupFormHandlers();
-                setupImagePreview();
-            } else {
-                alert('로그인 실패: ' + result.error);
-            }
-        });
-    }
-    
-    // 로그아웃 버튼 이벤트 리스너
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', async function() {
-            const result = await logoutUser();
-            if (result.success) {
-                alert('로그아웃 되었습니다.');
-                updateUIForLoggedOutUser();
-            }
-        });
-    }
-    
-    // 관리자 로그인 버튼 이벤트 리스너
-    const adminLoginBtn = document.getElementById('admin-login-btn');
-    const loginModal = document.getElementById('login-modal');
-    const closeLoginModalBtn = document.querySelector('#login-modal .close-modal');
-    
-    if (adminLoginBtn) {
-        adminLoginBtn.addEventListener('click', () => {
-            if (loginModal) loginModal.style.display = 'block';
-        });
-    }
-    
-    if (closeLoginModalBtn) {
-        closeLoginModalBtn.addEventListener('click', () => {
-            if (loginModal) loginModal.style.display = 'none';
-        });
-    }
-    
-    // 모달 외부 클릭 시 닫기
-    window.addEventListener('click', (e) => {
-        if (e.target === loginModal) {
-            loginModal.style.display = 'none';
-        }
-    });
 });
-
-// 로그인 함수 (아이디 기반)
-async function loginUser(username, password) {
-    try {
-        // 아이디를 이메일 형식으로 변환 (Supabase는 이메일을 요구함)
-        const email = username + '@admin.local';
-        
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
-        
-        if (error) {
-            throw error;
-        }
-        
-        currentUser = data.user;
-        // 사용자 정보에 아이디 추가
-        currentUser.username = username;
-        localStorage.setItem('user', JSON.stringify(currentUser));
-        return { success: true, user: currentUser };
-    } catch (error) {
-        console.error('Login error:', error);
-        return { success: false, error: error.message };
-    }
-}
-
-// 로그아웃 함수
-async function logoutUser() {
-    try {
-        const { error } = await supabaseClient.auth.signOut();
-        if (error) throw error;
-        
-        currentUser = null;
-        localStorage.removeItem('user');
-        return { success: true };
-    } catch (error) {
-        console.error('Logout error:', error);
-        return { success: false, error: error.message };
-    }
-}
 
 // 폼 핸들러 설정
 function setupFormHandlers() {
@@ -178,11 +55,9 @@ function setupFormHandlers() {
             return;
         }
         
-        const formData = new FormData(uploadForm);
-        const title = formData.get('title');
-        const description = formData.get('description');
-        // const category = formData.get('category'); // 나중에 카테고리 필터 활성화 시 사용
-        const photoFile = formData.get('photo');
+        const title = document.getElementById('title').value;
+        const description = document.getElementById('description').value;
+        const photoFile = document.getElementById('photo').files[0];
         
         if (!title || !photoFile) {
             showMessage('제목과 사진 파일은 필수입니다.', 'error');
@@ -262,7 +137,7 @@ async function uploadPhoto(title, description, photoFile) {
         const photoData = {
             title: title,
             description: description || '',
-            category: '일반', // 기본 카테고리로 설정 (나중에 카테고리 필터 활성화 시 변경)
+            category: '일반', // 기본 카테고리로 설정
             image_url: urlData.publicUrl,
             is_active: true
         };

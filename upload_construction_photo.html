@@ -253,65 +253,7 @@
         </nav>
     </header>
 
-    <!-- 로그인 모달 -->
-    <div id="login-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-user-lock"></i> 관리자 로그인</h2>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="login-form">
-                    <div class="form-group">
-                        <label for="login-email">아이디</label>
-                        <input type="text" id="login-email" required placeholder="admin">
-                    </div>
-                    <div class="form-group">
-                        <label for="login-password">비밀번호</label>
-                        <input type="password" id="login-password" required placeholder="비밀번호를 입력하세요">
-                    </div>
-                    <button type="submit" class="login-button">
-                        <i class="fas fa-sign-in-alt"></i> 로그인
-                    </button>
-                </form>
-                <button id="logout-btn" class="logout-button" style="display: none;">
-                    <i class="fas fa-sign-out-alt"></i> 로그아웃
-                </button>
-            </div>
-        </div>
-    </div>
 
-    <!-- 관리자 패널 -->
-    <div id="admin-panel" class="admin-panel" style="display: none;">
-        <div class="admin-panel-content">
-            <h3><i class="fas fa-crown"></i> 관리자 패널</h3>
-            <div class="admin-buttons">
-                <button onclick="openConstructionUpload()" class="admin-btn admin-only">
-                    <i class="fas fa-upload"></i> 시공사진 업로드
-                </button>
-                <button onclick="openEstimateManagement()" class="admin-btn">
-                    <i class="fas fa-list"></i> 견적문의 관리
-                </button>
-                <button onclick="openSiteSettings()" class="admin-btn">
-                    <i class="fas fa-cog"></i> 사이트 설정
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 관리자 접근 제한 메시지 -->
-    <div id="access-denied" class="access-denied" style="display: none;">
-        <i class="fas fa-lock"></i>
-        <h2>접근 권한이 없습니다</h2>
-        <p>시공사진 업로드는 관리자만 가능합니다.</p>
-        <p>관리자 계정으로 로그인 후 이용해주세요.</p>
-        <button id="admin-login-btn" class="admin-login-btn">
-            <i class="fas fa-user-shield"></i> 관리자 로그인
-        </button>
-        <a href="index.html" class="back-btn">
-            <i class="fas fa-home"></i> 홈으로 돌아가기
-        </a>
-    </div>
 
     <!-- 관리자 전용 업로드 폼 -->
     <div id="admin-upload-form" class="admin-only">
@@ -324,10 +266,6 @@
                 <div id="admin-success-message" style="display: none; background: #d4edda; color: #155724; padding: 1rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #c3e6cb; text-align: center;">
                     <i class="fas fa-check-circle"></i> 관리자로 로그인하였습니다! 사진 업로드가 가능합니다.
                 </div>
-                
-                <button onclick="logout()" class="logout-btn" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                    <i class="fas fa-sign-out-alt"></i> 로그아웃
-                </button>
             </div>
 
             <div id="flash-messages" class="flash-messages" style="display: none;"></div>
@@ -426,7 +364,6 @@
             
             if (!adminLoggedIn || adminInfo.username !== 'admin') {
                 // 관리자 로그인되지 않은 경우 로그인 페이지로 리다이렉트
-                alert('관리자 로그인이 필요합니다.');
                 window.location.href = 'admin-login.html';
                 return;
             }
@@ -449,14 +386,6 @@
                 // justLoggedIn 플래그 제거
                 localStorage.removeItem('justLoggedIn');
             }
-        }
-        
-        // 로그아웃 함수
-        function logout() {
-            localStorage.removeItem('adminLoggedIn');
-            localStorage.removeItem('adminInfo');
-            alert('로그아웃되었습니다.');
-            window.location.href = 'index.html';
         }
         
         // 페이지 로드 시 관리자 인증 확인
