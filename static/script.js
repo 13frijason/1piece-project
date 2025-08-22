@@ -65,10 +65,100 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 시공사진 슬라이더
 let currentSlide = 0;
-const slides = document.querySelectorAll('.slide');
-const totalSlides = slides.length;
+let slides = [];
+let totalSlides = 0;
+
+// Supabase에서 시공사진 데이터 가져오기
+async function loadConstructionPhotos() {
+    try {
+        console.log('시공사진 데이터 로딩 시작...');
+        
+        const { data: photos, error } = await supabase
+            .from('construction_photos')
+            .select('*')
+            .eq('is_active', true)
+            .order('created_at', { ascending: false })
+            .limit(10); // 최대 10개만 표시
+        
+        if (error) {
+            console.error('시공사진 로드 오류:', error);
+            showDefaultSlides();
+            return;
+        }
+        
+        console.log('로드된 시공사진:', photos);
+        
+        if (photos && photos.length > 0) {
+            createSlidesFromData(photos);
+        } else {
+            showDefaultSlides();
+        }
+        
+    } catch (error) {
+        console.error('시공사진 로드 중 오류:', error);
+        showDefaultSlides();
+    }
+}
+
+// 데이터로부터 슬라이드 생성
+function createSlidesFromData(photos) {
+    const sliderTrack = document.getElementById('construction-slider-track');
+    if (!sliderTrack) return;
+    
+    // 기존 로딩 슬라이드 제거
+    sliderTrack.innerHTML = '';
+    
+    // 각 사진에 대해 슬라이드 생성
+    photos.forEach((photo, index) => {
+        const slide = document.createElement('div');
+        slide.className = 'slide';
+        slide.innerHTML = `
+            <img src="${photo.image_url}" alt="${photo.title}" loading="lazy">
+            <div class="slide-info">
+                <h4>${photo.title}</h4>
+                ${photo.description ? `<p>${photo.description}</p>` : ''}
+            </div>
+        `;
+        sliderTrack.appendChild(slide);
+    });
+    
+    // 슬라이더 초기화
+    slides = document.querySelectorAll('.slide');
+    totalSlides = slides.length;
+    
+    if (totalSlides > 0) {
+        showSlide(0);
+        startAutoSlide();
+        setupSliderControls();
+    }
+}
+
+// 기본 슬라이드 표시 (데이터가 없을 때)
+function showDefaultSlides() {
+    const sliderTrack = document.getElementById('construction-slider-track');
+    if (!sliderTrack) return;
+    
+    sliderTrack.innerHTML = `
+        <div class="slide"><img src="static/images/gallery1.jpg" alt="시공현장 1"></div>
+        <div class="slide"><img src="static/images/gallery2.jpg" alt="시공현장 2"></div>
+        <div class="slide"><img src="static/images/gallery3.jpg" alt="시공현장 3"></div>
+        <div class="slide"><img src="static/images/gallery4.jpg" alt="시공현장 4"></div>
+        <div class="slide"><img src="static/images/gallery5.jpg" alt="시공현장 5"></div>
+    `;
+    
+    slides = document.querySelectorAll('.slide');
+    totalSlides = slides.length;
+    
+    if (totalSlides > 0) {
+        showSlide(0);
+        startAutoSlide();
+        setupSliderControls();
+    }
+}
 
 function showSlide(index) {
+    if (totalSlides === 0) return;
+    
     if (index >= totalSlides) currentSlide = 0;
     if (index < 0) currentSlide = totalSlides - 1;
     
@@ -87,17 +177,32 @@ function prevSlide() {
     showSlide(currentSlide);
 }
 
-// 자동 슬라이드
-if (slides.length > 0) {
-    setInterval(nextSlide, 5000);
-    
-    // 슬라이더 컨트롤 버튼 이벤트
+// 자동 슬라이드 시작
+function startAutoSlide() {
+    if (totalSlides > 1) {
+        setInterval(nextSlide, 5000);
+    }
+}
+
+// 슬라이더 컨트롤 설정
+function setupSliderControls() {
     const prevBtn = document.querySelector('.prev-btn');
     const nextBtn = document.querySelector('.next-btn');
     
     if (prevBtn) prevBtn.addEventListener('click', prevSlide);
     if (nextBtn) nextBtn.addEventListener('click', nextSlide);
 }
+
+// 페이지 로드 시 시공사진 로드
+document.addEventListener('DOMContentLoaded', function() {
+    // Supabase가 로드된 후 시공사진 로드
+    if (typeof supabase !== 'undefined') {
+        loadConstructionPhotos();
+    } else {
+        // Supabase가 아직 로드되지 않은 경우 잠시 대기
+        setTimeout(loadConstructionPhotos, 1000);
+    }
+});
 
 // 이미지 지연 로딩
 const images = document.querySelectorAll('img[data-src]');
@@ -134,10 +239,10 @@ function handleSwipe() {
     if (Math.abs(diff) > swipeThreshold) {
         if (diff > 0) {
             // 왼쪽으로 스와이프
-            if (slides.length > 0) nextSlide();
+            if (totalSlides > 0) nextSlide();
         } else {
             // 오른쪽으로 스와이프
-            if (slides.length > 0) prevSlide();
+            if (totalSlides > 0) prevSlide();
         }
     }
 }

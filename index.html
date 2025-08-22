@@ -117,20 +117,14 @@
             <h2><i class="fas fa-hard-hat"></i> 시스템에어컨 시공현장</h2>
             <div class="construction-slider">
                 <div class="slider-container">
-                    <div class="slider-track">
-                        <div class="slide"><img src="static/images/gallery1.jpg" alt="시공현장 1"></div>
-                        <div class="slide"><img src="static/images/gallery2.jpg" alt="시공현장 2"></div>
-                        <div class="slide"><img src="static/images/gallery3.jpg" alt="시공현장 3"></div>
-                        <div class="slide"><img src="static/images/gallery4.jpg" alt="시공현장 4"></div>
-                        <div class="slide"><img src="static/images/gallery5.jpg" alt="시공현장 5"></div>
-                        <div class="slide"><img src="static/images/gallery6.jpg" alt="시공현장 6"></div>
-                        <div class="slide"><img src="static/images/gallery7.jpg" alt="시공현장 7"></div>
-                        <div class="slide"><img src="static/images/gallery8.jpg" alt="시공현장 8"></div>
-                        <div class="slide"><img src="static/images/gallery9.jpg" alt="시공현장 9"></div>
-                        <div class="slide"><img src="static/images/gallery10.jpg" alt="시공현장 10"></div>
-                        <div class="slide"><img src="static/images/gallery11.jpg" alt="시공현장 11"></div>
-                        <div class="slide"><img src="static/images/gallery12.jpg" alt="시공현장 12"></div>
-                        <div class="slide"><img src="static/images/gallery13.jpg" alt="시공현장 13"></div>
+                    <div class="slider-track" id="construction-slider-track">
+                        <!-- 동적으로 생성될 슬라이드들 -->
+                        <div class="slide loading-slide">
+                            <div class="loading-spinner">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>시공사진을 불러오는 중...</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="slider-controls">
