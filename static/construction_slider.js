@@ -2,7 +2,21 @@
 const SUPABASE_URL = 'https://jykkpfrpnpkycqyokqnm.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5a2twZnJwbnBreWNxeW9rcW5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3MTY1NjgsImV4cCI6MjA2ODI5MjU2OH0.vMXLe-ccOQXuH2I6M-9WIYJcxoCMQygh5ldBGdd3jzk';
 
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Supabase 클라이언트 초기화 (js/supabase.js에서 가져온 설정 사용)
+let supabaseClient;
+try {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch (error) {
+    console.error('Supabase 클라이언트 초기화 실패:', error);
+    // fallback 객체 생성
+    supabaseClient = {
+        from: () => ({
+            select: () => Promise.resolve({ data: [], error: null }),
+            insert: () => Promise.resolve({ data: null, error: 'Supabase 연결 실패' }),
+            delete: () => Promise.resolve({ data: null, error: 'Supabase 연결 실패' })
+        })
+    };
+}
 
 // 페이지 로드 시 시공사진 로드
 document.addEventListener('DOMContentLoaded', function() {

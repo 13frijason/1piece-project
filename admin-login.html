@@ -141,7 +141,7 @@
         <nav class="main-nav">
             <div class="logo">
                 <h1>
-                    <img src="static/images/logo.png" alt="원피스공조 로고" class="logo-img">
+                    <img src="static/images/company_logo.png" alt="원피스공조 로고" class="logo-img">
                 </h1>
             </div>
             <ul class="nav-links">
@@ -188,7 +188,7 @@
     <footer>
         <div class="footer-content">
             <div class="footer-left">
-                <img src="static/images/logo.png" alt="원피스공조 로고" class="footer-logo">
+                <img src="static/images/company_logo.png" alt="원피스공조 로고" class="footer-logo">
             </div>
             <div class="footer-center">
                 <h3>원피스공조</h3>
@@ -239,14 +239,15 @@
                 // 로컬 스토리지에 관리자 정보 저장
                 localStorage.setItem('adminLoggedIn', 'true');
                 localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
+                localStorage.setItem('justLoggedIn', 'true'); // 방금 로그인했다는 플래그 설정
                 
                 // 성공 메시지 표시
-                successMessage.textContent = '로그인 성공! 잠시 후 관리자 페이지로 이동합니다.';
+                successMessage.textContent = '로그인 성공! 시공사진 게시판으로 이동합니다.';
                 successMessage.style.display = 'block';
                 
-                // 1초 후 관리자 페이지로 이동
+                // 1초 후 시공사진 게시판으로 이동
                 setTimeout(() => {
-                    window.location.href = 'upload_construction_photo.html';
+                    window.location.href = 'construction_photos.html';
                 }, 1000);
             } else {
                 // 로그인 실패
@@ -262,8 +263,8 @@
         window.addEventListener('load', function() {
             const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
             if (adminLoggedIn) {
-                // 이미 로그인된 경우 관리자 페이지로 리다이렉트
-                window.location.href = 'upload_construction_photo.html';
+                // 이미 로그인된 경우 시공사진 게시판으로 리다이렉트
+                window.location.href = 'construction_photos.html';
             }
         });
     </script>
