@@ -1,6 +1,3 @@
-// js/supabase.js에서 정의된 supabase 클라이언트 사용
-let supabaseClient;
-
 // 관리자 권한 확인 함수
 function isAdmin() {
     const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
@@ -11,10 +8,6 @@ function isAdmin() {
 // 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM 로드됨');
-    
-    // js/supabase.js에서 정의된 supabase 클라이언트 사용
-    supabaseClient = window.supabase;
-    console.log('Supabase 클라이언트 사용:', supabaseClient);
     
     // 관리자 권한이 있는 경우에만 폼 핸들러 설정
     if (isAdmin()) {
@@ -122,7 +115,7 @@ async function uploadPhoto(title, description, photoFile) {
             console.log('생성된 파일명:', fileName);
             
             // Supabase Storage에 파일 업로드
-            const { data: uploadData, error: uploadError } = await supabaseClient.storage
+            const { data: uploadData, error: uploadError } = await window.supabase.storage
                 .from('construction-photos')
                 .upload(fileName, photoFile);
             
@@ -134,7 +127,7 @@ async function uploadPhoto(title, description, photoFile) {
             console.log('파일 업로드 성공:', uploadData);
             
             // 업로드된 파일의 공개 URL 가져오기
-            const { data: urlData } = supabaseClient.storage
+            const { data: urlData } = window.supabase.storage
                 .from('construction-photos')
                 .getPublicUrl(fileName);
             
@@ -151,7 +144,7 @@ async function uploadPhoto(title, description, photoFile) {
             
             console.log('저장할 데이터:', photoData);
             
-            const { data: insertData, error: insertError } = await supabaseClient
+            const { data: insertData, error: insertError } = await window.supabase
                 .from('construction_photos')
                 .insert([photoData]);
             
