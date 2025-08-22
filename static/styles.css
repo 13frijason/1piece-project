@@ -374,24 +374,51 @@ section {
 }
 
 .construction-more-btn {
-    display: inline-block;
-    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 1rem 2rem;
+    padding: 1.2rem 2.5rem;
     text-decoration: none;
     border-radius: 50px;
     font-weight: 600;
-    transition: all 0.3s;
-    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
     border: none;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.construction-more-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.construction-more-btn:hover::before {
+    left: 100%;
 }
 
 .construction-more-btn:hover {
-    background: linear-gradient(135deg, #5a6268 0%, #343a40 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+}
+
+.construction-more-btn i:last-child {
+    transition: transform 0.3s ease;
+}
+
+.construction-more-btn:hover i:last-child {
+    transform: translateX(5px);
 }
 
 /* 회사소개 섹션 */
@@ -749,6 +776,35 @@ section {
 
 .admin-only {
     display: none;
+}
+
+/* 관리자 모드 표시 */
+.admin-mode-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    color: #2c3e50;
+    padding: 0.6rem 1.2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    animation: adminPulse 2s infinite;
+}
+
+.admin-mode-indicator i {
+    color: #2c3e50;
+    font-size: 1rem;
+}
+
+@keyframes adminPulse {
+    0%, 100% {
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(255, 215, 0, 0.5);
+    }
 }
 
 /* 푸터 스타일 */

@@ -306,7 +306,12 @@
                 <p class="board-subtitle">원피스공조의 다양한 시공현장 사진들을 확인하세요</p>
             </div>
             <div class="board-actions">
-                <a href="admin-login.html" id="admin-upload-btn" class="upload-btn" style="display: none;">
+                <!-- 관리자 모드 표시 -->
+                <div id="admin-mode-indicator" class="admin-mode-indicator" style="display: none;">
+                    <i class="fas fa-crown"></i>
+                    <span>관리자 모드</span>
+                </div>
+                <a href="upload_construction_photo.html" id="admin-upload-btn" class="upload-btn" style="display: none;">
                     <i class="fas fa-upload"></i>
                     사진 업로드
                 </a>
@@ -397,6 +402,7 @@
             const adminUploadBtnEmpty = document.getElementById('admin-upload-btn-empty');
             const loginBtn = document.getElementById('login-btn');
             const successMessage = document.getElementById('admin-success-message');
+            const adminModeIndicator = document.getElementById('admin-mode-indicator');
             
             if (adminLoggedIn && adminInfo.username === 'admin') {
                 // 관리자 로그인된 경우 업로드 버튼 표시, 로그인 버튼 숨김
@@ -410,6 +416,11 @@
                 }
                 if (loginBtn) {
                     loginBtn.style.display = 'none';
+                }
+                
+                // 관리자 모드 표시 활성화
+                if (adminModeIndicator) {
+                    adminModeIndicator.style.display = 'inline-flex';
                 }
                 
                 // 방금 로그인한 경우 성공 메시지 표시
@@ -435,6 +446,11 @@
                 }
                 if (successMessage) {
                     successMessage.style.display = 'none';
+                }
+                
+                // 관리자 모드 표시 숨김
+                if (adminModeIndicator) {
+                    adminModeIndicator.style.display = 'none';
                 }
             }
         }
