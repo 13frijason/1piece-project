@@ -13,12 +13,16 @@ html, body {
     -moz-osx-font-smoothing: grayscale;
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
 }
 
 /* 프레임 관련 스타일 */
-iframe {
-    max-width: 100%;
-    border: none;
+iframe, object, embed {
+    max-width: 100% !important;
+    height: auto !important;
+    border: none !important;
 }
 
 /* 모바일에서 스크롤바 숨기기 */
@@ -35,10 +39,11 @@ body {
 }
 
 html {
-    overflow-x: hidden;
-    width: 100%;
-    margin: 0;
-    padding: 0;
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     /* 프레임 관련 스타일 추가 */
@@ -52,11 +57,12 @@ body {
     color: #333;
     background-color: #fafafa;
     scroll-behavior: smooth;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    min-width: 100%;
-    overflow-x: hidden;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    overflow-x: hidden !important;
     position: relative;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -69,13 +75,15 @@ header {
     background-color: rgba(255, 255, 255, 0.98);
     box-shadow: 0 2px 15px rgba(0,0,0,0.08);
     position: fixed;
-    width: 100%;
-    left: 0;
-    right: 0;
+    width: 100% !important;
+    max-width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
     top: 0;
     z-index: 1000;
     backdrop-filter: blur(10px);
-    overflow-x: hidden;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
 }
 
 .main-nav {
@@ -85,9 +93,10 @@ header {
     padding: 0.8rem 5%;
     max-width: 1400px;
     margin: 0 auto;
-    width: 100%;
-    box-sizing: border-box;
-    overflow-x: hidden;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
 }
 
 .logo {
@@ -428,6 +437,34 @@ header {
 }
 
 .upload-btn i {
+    margin-right: 0.5rem;
+}
+
+.login-btn {
+    background: linear-gradient(135deg, #4a4a4a 0%, #333333 100%);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 1rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.login-btn:hover {
+    background: linear-gradient(135deg, #333333 0%, #1a1a1a 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(74, 74, 74, 0.3);
+}
+
+.login-btn i {
     margin-right: 0.5rem;
 }
 
@@ -910,9 +947,12 @@ footer {
     background-color: #1a1a1a;
     color: white;
     padding: 5rem 2rem 2rem;
-    width: 100%;
-    box-sizing: border-box;
-    overflow-x: hidden;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+    margin: 0 !important;
+    position: relative !important;
 }
 
 .footer-content {
@@ -924,8 +964,10 @@ footer {
     align-items: flex-start;
     gap: 3rem;
     padding-bottom: 2rem;
-    width: 100%;
-    box-sizing: border-box;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
 }
 
 .footer-left {
@@ -1405,10 +1447,15 @@ footer {
     }
 
     .footer-left, .footer-center, .footer-right {
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        width: 100%;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-x: hidden !important;
     }
 
     .footer-logo {
@@ -1634,10 +1681,13 @@ footer {
     }
 
     .footer-left, .footer-center, .footer-right {
-        padding: 0 0.5rem;
-        width: 100%;
-        box-sizing: border-box;
-        text-align: center;
+        padding: 0 0.5rem !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+        margin: 0 !important;
+        overflow-x: hidden !important;
     }
 
     .footer-logo {
@@ -1782,27 +1832,28 @@ footer {
 }
 
 .construction-more-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-    color: white;
-    padding: 1rem 2rem;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
-    border: 2px solid #6c757d;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+    color: white !important;
+    padding: 1rem 2rem !important;
+    border-radius: 50px !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+    font-size: 1.1rem !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3) !important;
+    border: 2px solid #6c757d !important;
+    cursor: pointer !important;
 }
 
 .construction-more-btn:hover {
-    background: linear-gradient(135deg, #495057 0%, #343a40 100%);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
-    border-color: #495057;
+    background: linear-gradient(135deg, #495057 0%, #343a40 100%) !important;
+    color: white !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4) !important;
+    border-color: #495057 !important;
 }
 
 .construction-more-btn i {
@@ -3065,14 +3116,16 @@ footer {
 }
 
 .footer-links-bottom {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 1.5rem;
-    margin-bottom: 0.5rem;
-    width: 100%;
-    box-sizing: border-box;
-    flex-wrap: wrap;
+    display: flex !important;
+    justify-content: center !important;
+    gap: 2rem !important;
+    margin-top: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    flex-wrap: wrap !important;
+    overflow-x: hidden !important;
 }
 .footer-links-bottom a {
     color: #ccc;
@@ -3146,18 +3199,27 @@ footer {
 
     /* 푸터 정렬 개선 */
     footer {
-        padding: 3rem 1rem 2rem;
-        width: 100%;
-        box-sizing: border-box;
-        overflow-x: hidden;
+        padding: 3rem 1rem 2rem !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+        margin: 0 !important;
+        position: relative !important;
+        display: block !important;
     }
     
     .footer-content {
-        text-align: center;
-        width: 100%;
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
+        text-align: center !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-x: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 1.5rem !important;
     }
 
     .footer-center p {
@@ -3218,15 +3280,25 @@ footer {
     padding: 0;
   }
   footer {
-    padding: 2rem 0.5rem 1rem;
-    width: 100%;
-    box-sizing: border-box;
-    overflow-x: hidden;
+    padding: 2rem 0.5rem 1rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+    margin: 0 !important;
+    position: relative !important;
+    display: block !important;
   }
   
   .footer-content {
-    padding: 1rem 0.5rem;
-    gap: 1rem;
+    padding: 1rem 0.5rem !important;
+    gap: 1rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
   
   .footer-center p {
@@ -4029,6 +4101,59 @@ footer {
     .submit-button,
     .calculate-button {
         min-height: 44px !important;
+        
+    /* 모바일에서 모든 요소가 화면에 가득 차도록 강제 적용 */
+    * {
+        box-sizing: border-box !important;
+    }
+    
+    /* 모바일에서 모든 섹션과 컨테이너가 화면에 가득 차도록 */
+    main, section, .container, .form-container, .detail-container, .board-container, .upload-container,
+    .hero-content, .service-grid, .about-content, .quote-content, .contact-info,
+    .construction-slider, .slider-container, .about-container, .quote-container, .contact-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+    }
+    
+    /* 모바일에서 특정 섹션들의 패딩 조정 */
+    #hero, #services, #about, #quote, #contact, #construction-site {
+        padding: 2rem 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 모바일에서 시공사진 더보기 버튼 강화 */
+    .construction-more-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+        color: white !important;
+        padding: 1rem 2rem !important;
+        border-radius: 50px !important;
+        text-decoration: none !important;
+        font-weight: 500 !important;
+        font-size: 1.1rem !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3) !important;
+        border: 2px solid #6c757d !important;
+        cursor: pointer !important;
+        min-height: 44px !important;
+    }
+    
+    .construction-more-btn:hover {
+        background: linear-gradient(135deg, #495057 0%, #343a40 100%) !important;
+        color: white !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4) !important;
+        border-color: #495057 !important;
+    }
         padding: 0.8rem 1.5rem !important;
     }
     
@@ -4056,5 +4181,53 @@ footer {
     embed {
         max-width: 100% !important;
         height: auto !important;
+    }
+    
+    /* 768px 이하에서 모든 섹션과 컨테이너가 화면에 가득 차도록 */
+    main, section, .container, .form-container, .detail-container, .board-container, .upload-container,
+    .hero-content, .service-grid, .about-content, .quote-content, .contact-info,
+    .construction-slider, .slider-container, .about-container, .quote-container, .contact-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+    }
+    
+    /* 768px 이하에서 특정 섹션들의 패딩 조정 */
+    #hero, #services, #about, #quote, #contact, #construction-site {
+        padding: 2rem 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 768px 이하에서 시공사진 더보기 버튼 강화 */
+    .construction-more-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+        color: white !important;
+        padding: 1rem 2rem !important;
+        border-radius: 50px !important;
+        text-decoration: none !important;
+        font-weight: 500 !important;
+        font-size: 1.1rem !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3) !important;
+        border: 2px solid #6c757d !important;
+        cursor: pointer !important;
+        min-height: 44px !important;
+    }
+    
+    .construction-more-btn:hover {
+        background: linear-gradient(135deg, #495057 0%, #343a40 100%) !important;
+        color: white !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4) !important;
+        border-color: #495057 !important;
     }
 }

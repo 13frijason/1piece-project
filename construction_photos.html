@@ -310,6 +310,10 @@
                     <i class="fas fa-upload"></i>
                     사진 업로드
                 </a>
+                <a href="admin-login.html" id="login-btn" class="login-btn" style="display: none;">
+                    <i class="fas fa-sign-in-alt"></i>
+                    관리자 로그인
+                </a>
             </div>
         </div>
 
@@ -385,9 +389,10 @@
             
             const adminUploadBtn = document.getElementById('admin-upload-btn');
             const adminUploadBtnEmpty = document.getElementById('admin-upload-btn-empty');
+            const loginBtn = document.getElementById('login-btn');
             
             if (adminLoggedIn && adminInfo.username === 'admin') {
-                // 관리자 로그인된 경우 업로드 버튼 표시
+                // 관리자 로그인된 경우 업로드 버튼 표시, 로그인 버튼 숨김
                 if (adminUploadBtn) {
                     adminUploadBtn.style.display = 'inline-flex';
                     adminUploadBtn.href = 'upload_construction_photo.html';
@@ -396,13 +401,19 @@
                     adminUploadBtnEmpty.style.display = 'inline-flex';
                     adminUploadBtnEmpty.href = 'upload_construction_photo.html';
                 }
+                if (loginBtn) {
+                    loginBtn.style.display = 'none';
+                }
             } else {
-                // 관리자 로그인되지 않은 경우 업로드 버튼 숨김
+                // 관리자 로그인되지 않은 경우 업로드 버튼 숨김, 로그인 버튼 표시
                 if (adminUploadBtn) {
                     adminUploadBtn.style.display = 'none';
                 }
                 if (adminUploadBtnEmpty) {
                     adminUploadBtnEmpty.style.display = 'none';
+                }
+                if (loginBtn) {
+                    loginBtn.style.display = 'inline-flex';
                 }
             }
         }
