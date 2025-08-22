@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase 연결 테스트</title>
+</head>
+<body>
+    <h1>Supabase 연결 테스트</h1>
+    <div id="result"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://jykkpfrpnpkycqyokqnm.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5a2twZnJwbnBreWNxeW9rcW5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3MTY1NjgsImV4cCI6MjA2ODI5MjU2OH0.vMXLe-ccOQXuH2I6M-9WIYJcxoCMQygh5ldBGdd3jzk';
+
+        async function testSupabaseConnection() {
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                console.log('Supabase 클라이언트 생성 중...');
+                const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                
+                console.log('테이블 조회 시도...');
+                const { data, error } = await supabase
+                    .from('construction_photos')
+                    .select('*')
+                    .limit(1);
+                
+                if (error) {
+                    console.error('오류:', error);
+                    resultDiv.innerHTML = `<p style="color: red;">오류: ${error.message}</p>`;
+                } else {
+                    console.log('성공:', data);
+                    resultDiv.innerHTML = `<p style="color: green;">연결 성공! 데이터: ${JSON.stringify(data)}</p>`;
+                }
+            } catch (error) {
+                console.error('예외:', error);
+                resultDiv.innerHTML = `<p style="color: red;">예외: ${error.message}</p>`;
+            }
+        }
+
+        // 페이지 로드 시 테스트 실행
+        window.addEventListener('load', testSupabaseConnection);
+    </script>
+</body>
+</html>
