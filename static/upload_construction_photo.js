@@ -221,4 +221,4 @@ function showMessage(message, type = 'success') {
     setTimeout(() => {
         flashMessages.style.display = 'none';
     }, hideTime);
-} 
+}
