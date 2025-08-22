@@ -1,8 +1,4 @@
-// Supabase 설정
-const SUPABASE_URL = 'https://jykkpfrpnpkycqyokqnm.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5a2twZnJwbnBreWNxeW9rcW5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3MTY1NjgsImV4cCI6MjA2ODI5MjU2OH0.vMXLe-ccOQXuH2I6M-9WIYJcxoCMQygh5ldBGdd3jzk';
-
-// Supabase 클라이언트 초기화
+// js/supabase.js에서 정의된 supabase 클라이언트 사용
 let supabaseClient;
 
 // 관리자 권한 확인 함수
@@ -16,14 +12,9 @@ function isAdmin() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM 로드됨');
     
-    // Supabase 클라이언트 초기화
-    try {
-        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        console.log('Supabase 클라이언트 초기화 성공');
-    } catch (error) {
-        console.error('Supabase 클라이언트 초기화 실패:', error);
-        return;
-    }
+    // js/supabase.js에서 정의된 supabase 클라이언트 사용
+    supabaseClient = window.supabase;
+    console.log('Supabase 클라이언트 사용:', supabaseClient);
     
     // 관리자 권한이 있는 경우에만 폼 핸들러 설정
     if (isAdmin()) {
