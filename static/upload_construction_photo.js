@@ -4,25 +4,6 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 // Supabase 클라이언트 초기화
 let supabaseClient;
-try {
-    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-} catch (error) {
-    console.error('Supabase 클라이언트 초기화 실패:', error);
-    // fallback 객체 생성
-    supabaseClient = {
-        from: () => ({
-            select: () => Promise.resolve({ data: [], error: null }),
-            insert: () => Promise.resolve({ data: null, error: 'Supabase 연결 실패' }),
-            delete: () => Promise.resolve({ data: null, error: 'Supabase 연결 실패' })
-        }),
-        storage: {
-            from: () => ({
-                upload: () => Promise.resolve({ data: null, error: 'Supabase Storage 연결 실패' }),
-                getPublicUrl: () => ({ data: { publicUrl: '' } })
-            })
-        }
-    };
-}
 
 // 관리자 권한 확인 함수
 function isAdmin() {
@@ -33,10 +14,24 @@ function isAdmin() {
 
 // 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM 로드됨');
+    
+    // Supabase 클라이언트 초기화
+    try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        console.log('Supabase 클라이언트 초기화 성공');
+    } catch (error) {
+        console.error('Supabase 클라이언트 초기화 실패:', error);
+        return;
+    }
+    
     // 관리자 권한이 있는 경우에만 폼 핸들러 설정
     if (isAdmin()) {
+        console.log('관리자 권한 확인됨, 폼 핸들러 설정');
         setupFormHandlers();
         setupImagePreview();
+    } else {
+        console.log('관리자 권한 없음');
     }
 });
 
@@ -44,10 +39,16 @@ document.addEventListener('DOMContentLoaded', function() {
 function setupFormHandlers() {
     const uploadForm = document.getElementById('upload-form');
     
-    if (!uploadForm) return;
+    if (!uploadForm) {
+        console.error('업로드 폼을 찾을 수 없습니다.');
+        return;
+    }
+    
+    console.log('폼 핸들러 설정됨');
     
     uploadForm.addEventListener('submit', async function(e) {
         e.preventDefault();
+        console.log('폼 제출됨');
         
         // 관리자 권한 재확인
         if (!isAdmin()) {
@@ -58,6 +59,8 @@ function setupFormHandlers() {
         const title = document.getElementById('title').value;
         const description = document.getElementById('description').value;
         const photoFile = document.getElementById('photo').files[0];
+        
+        console.log('폼 데이터:', { title, description, photoFile: photoFile ? photoFile.name : '없음' });
         
         if (!title || !photoFile) {
             showMessage('제목과 사진 파일은 필수입니다.', 'error');
@@ -73,7 +76,10 @@ function setupImagePreview() {
     const photoInput = document.getElementById('photo');
     const previewDiv = document.getElementById('upload-preview');
     
-    if (!photoInput || !previewDiv) return;
+    if (!photoInput || !previewDiv) {
+        console.error('이미지 미리보기 요소를 찾을 수 없습니다.');
+        return;
+    }
     
     photoInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
@@ -110,12 +116,15 @@ function setupImagePreview() {
 // 사진 업로드 함수
 async function uploadPhoto(title, description, photoFile) {
     try {
+        console.log('업로드 시작:', { title, description, fileName: photoFile.name });
         showMessage('업로드 중입니다...', 'success');
         
         // 파일명 생성 (타임스탬프 + 원본 파일명)
         const timestamp = new Date().getTime();
         const fileExtension = photoFile.name.split('.').pop();
         const fileName = `${timestamp}_${Math.random().toString(36).substring(2)}.${fileExtension}`;
+        
+        console.log('생성된 파일명:', fileName);
         
         // Supabase Storage에 파일 업로드
         const { data: uploadData, error: uploadError } = await supabaseClient.storage
@@ -124,14 +133,18 @@ async function uploadPhoto(title, description, photoFile) {
         
         if (uploadError) {
             console.error('파일 업로드 오류:', uploadError);
-            showMessage('파일 업로드에 실패했습니다.', 'error');
+            showMessage('파일 업로드에 실패했습니다: ' + uploadError.message, 'error');
             return;
         }
+        
+        console.log('파일 업로드 성공:', uploadData);
         
         // 업로드된 파일의 공개 URL 가져오기
         const { data: urlData } = supabaseClient.storage
             .from('construction-photos')
             .getPublicUrl(fileName);
+        
+        console.log('공개 URL:', urlData.publicUrl);
         
         // 데이터베이스에 사진 정보 저장
         const photoData = {
@@ -142,16 +155,19 @@ async function uploadPhoto(title, description, photoFile) {
             is_active: true
         };
         
+        console.log('저장할 데이터:', photoData);
+        
         const { data: insertData, error: insertError } = await supabaseClient
             .from('construction_photos')
             .insert([photoData]);
         
         if (insertError) {
             console.error('데이터베이스 저장 오류:', insertError);
-            showMessage('사진 정보 저장에 실패했습니다.', 'error');
+            showMessage('사진 정보 저장에 실패했습니다: ' + insertError.message, 'error');
             return;
         }
         
+        console.log('데이터베이스 저장 성공:', insertData);
         showMessage('시공사진이 성공적으로 업로드되었습니다!', 'success');
         
         // 폼 초기화
@@ -165,14 +181,20 @@ async function uploadPhoto(title, description, photoFile) {
         
     } catch (error) {
         console.error('업로드 오류:', error);
-        showMessage('업로드 중 오류가 발생했습니다.', 'error');
+        showMessage('업로드 중 오류가 발생했습니다: ' + error.message, 'error');
     }
 }
 
 // 메시지 표시 함수
 function showMessage(message, type = 'success') {
+    console.log('메시지 표시:', type, message);
+    
     const flashMessages = document.getElementById('flash-messages');
-    if (!flashMessages) return;
+    if (!flashMessages) {
+        console.error('flash-messages 요소를 찾을 수 없습니다.');
+        alert(message); // fallback
+        return;
+    }
     
     flashMessages.innerHTML = `
         <div class="flash-message flash-${type}">
