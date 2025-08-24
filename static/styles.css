@@ -266,18 +266,25 @@ section {
     overflow: hidden;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    position: relative;
 }
 
 .slide {
     min-width: 100%;
     position: relative;
-    transition: transform 0.5s ease;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
 }
 
 .slide img {
     width: 100%;
     height: 400px;
     object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.slide:hover img {
+    transform: scale(1.05);
 }
 
 /* 로딩 스피너 */
@@ -287,6 +294,7 @@ section {
     justify-content: center;
     background: rgba(0,0,0,0.1);
     color: white;
+    min-height: 400px;
 }
 
 .loading-spinner {
@@ -297,6 +305,12 @@ section {
     font-size: 2rem;
     margin-bottom: 1rem;
     color: #3498db;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .loading-spinner p {
@@ -310,11 +324,12 @@ section {
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    background: linear-gradient(transparent, rgba(0,0,0,0.9));
     color: white;
-    padding: 1.5rem;
+    padding: 2rem 1.5rem 1.5rem;
     transform: translateY(100%);
-    transition: transform 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(5px);
 }
 
 .slide:hover .slide-info {
@@ -322,15 +337,17 @@ section {
 }
 
 .slide-info h4 {
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
     font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 .slide-info p {
-    font-size: 0.9rem;
-    opacity: 0.9;
-    line-height: 1.4;
+    font-size: 1rem;
+    opacity: 0.95;
+    line-height: 1.5;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .slide-content {
@@ -351,21 +368,34 @@ section {
     display: flex;
     justify-content: space-between;
     padding: 0 1rem;
+    pointer-events: none; /* 버튼이 아닌 영역 클릭 방지 */
 }
 
-.slider-btn {
+.prev-btn, .next-btn {
     background: rgba(255,255,255,0.2);
     border: none;
     color: white;
     padding: 1rem;
     border-radius: 50%;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.3s ease;
     backdrop-filter: blur(10px);
+    pointer-events: auto; /* 버튼 클릭 가능 */
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
 }
 
-.slider-btn:hover {
+.prev-btn:hover, .next-btn:hover {
     background: rgba(255,255,255,0.3);
+    transform: scale(1.1);
+}
+
+.prev-btn:active, .next-btn:active {
+    transform: scale(0.95);
 }
 
 .construction-more {
@@ -1165,5 +1195,79 @@ footer {
     
     input, textarea, select {
         font-size: 16px !important;
+    }
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+    .construction-slider {
+        margin-top: 2rem;
+    }
+    
+    .slide img {
+        height: 300px;
+    }
+    
+    .loading-slide {
+        min-height: 300px;
+    }
+    
+    .slider-controls {
+        padding: 0 0.5rem;
+    }
+    
+    .prev-btn, .next-btn {
+        width: 45px;
+        height: 45px;
+        padding: 0.8rem;
+        font-size: 1rem;
+    }
+    
+    .slide-info {
+        padding: 1.5rem 1rem 1rem;
+    }
+    
+    .slide-info h4 {
+        font-size: 1.1rem;
+        margin-bottom: 0.6rem;
+    }
+    
+    .slide-info p {
+        font-size: 0.9rem;
+    }
+    
+    .construction-more-btn {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .slide img {
+        height: 250px;
+    }
+    
+    .loading-slide {
+        min-height: 250px;
+    }
+    
+    .prev-btn, .next-btn {
+        width: 40px;
+        height: 40px;
+        padding: 0.6rem;
+        font-size: 0.9rem;
+    }
+    
+    .slide-info {
+        padding: 1rem 0.8rem 0.8rem;
+    }
+    
+    .slide-info h4 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .slide-info p {
+        font-size: 0.8rem;
     }
 }

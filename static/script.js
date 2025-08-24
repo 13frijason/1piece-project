@@ -73,7 +73,20 @@ async function loadConstructionPhotos() {
     try {
         console.log('시공사진 데이터 로딩 시작...');
         
-        const { data: photos, error } = await supabase
+        // Supabase 클라이언트 확인
+        if (typeof window.supabase === 'undefined') {
+            console.error('Supabase가 로드되지 않았습니다.');
+            showDefaultSlides();
+            return;
+        }
+        
+        // Supabase 클라이언트 생성
+        const supabaseUrl = 'https://jykkpfrpnpkycqyokqnm.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5a2twZnJwbnBreWNxeW9rcW5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3MTY1NjgsImV4cCI6MjA2ODI5MjU2OH0.vMXLe-ccOQXuH2I6M-9WIYJcxoCMQygh5ldBGdd3jzk';
+        
+        const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+        
+        const { data: photos, error } = await supabaseClient
             .from('construction_photos')
             .select('*')
             .eq('is_active', true)
@@ -91,6 +104,7 @@ async function loadConstructionPhotos() {
         if (photos && photos.length > 0) {
             createSlidesFromData(photos);
         } else {
+            console.log('활성화된 시공사진이 없습니다. 기본 슬라이드를 표시합니다.');
             showDefaultSlides();
         }
         
@@ -130,6 +144,7 @@ function createSlidesFromData(photos) {
         showSlide(0);
         startAutoSlide();
         setupSliderControls();
+        setupTouchEvents(); // 터치 이벤트 설정 추가
     }
 }
 
@@ -153,6 +168,7 @@ function showDefaultSlides() {
         showSlide(0);
         startAutoSlide();
         setupSliderControls();
+        setupTouchEvents(); // 터치 이벤트 설정 추가
     }
 }
 
@@ -178,9 +194,25 @@ function prevSlide() {
 }
 
 // 자동 슬라이드 시작
+let autoSlideInterval;
+
 function startAutoSlide() {
     if (totalSlides > 1) {
-        setInterval(nextSlide, 5000);
+        // 기존 인터벌 제거
+        if (autoSlideInterval) {
+            clearInterval(autoSlideInterval);
+        }
+        
+        autoSlideInterval = setInterval(() => {
+            nextSlide();
+        }, 5000);
+    }
+}
+
+function stopAutoSlide() {
+    if (autoSlideInterval) {
+        clearInterval(autoSlideInterval);
+        autoSlideInterval = null;
     }
 }
 
@@ -189,19 +221,47 @@ function setupSliderControls() {
     const prevBtn = document.querySelector('.prev-btn');
     const nextBtn = document.querySelector('.next-btn');
     
-    if (prevBtn) prevBtn.addEventListener('click', prevSlide);
-    if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            stopAutoSlide();
+            prevSlide();
+            startAutoSlide(); // 자동 슬라이드 재시작
+        });
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            stopAutoSlide();
+            nextSlide();
+            startAutoSlide(); // 자동 슬라이드 재시작
+        });
+    }
+    
+    // 슬라이더에 마우스 호버 시 자동 슬라이드 일시정지
+    const sliderContainer = document.querySelector('.construction-slider');
+    if (sliderContainer) {
+        sliderContainer.addEventListener('mouseenter', stopAutoSlide);
+        sliderContainer.addEventListener('mouseleave', startAutoSlide);
+    }
 }
 
 // 페이지 로드 시 시공사진 로드
 document.addEventListener('DOMContentLoaded', function() {
-    // Supabase가 로드된 후 시공사진 로드
-    if (typeof supabase !== 'undefined') {
-        loadConstructionPhotos();
-    } else {
-        // Supabase가 아직 로드되지 않은 경우 잠시 대기
-        setTimeout(loadConstructionPhotos, 1000);
-    }
+    console.log('DOM 로드됨, 시공사진 로드 시작...');
+    
+    // Supabase가 로드될 때까지 대기
+    const checkSupabase = () => {
+        if (typeof window.supabase !== 'undefined') {
+            console.log('Supabase 로드됨, 시공사진 로드 시작');
+            loadConstructionPhotos();
+        } else {
+            console.log('Supabase 아직 로드되지 않음, 500ms 후 재시도...');
+            setTimeout(checkSupabase, 500);
+        }
+    };
+    
+    // 즉시 체크 시작
+    checkSupabase();
 });
 
 // 이미지 지연 로딩
@@ -221,28 +281,45 @@ images.forEach(img => imageObserver.observe(img));
 
 // 터치 이벤트 최적화
 let touchStartX = 0;
+let touchStartY = 0;
 let touchEndX = 0;
+let touchEndY = 0;
 
-document.addEventListener('touchstart', e => {
-    touchStartX = e.changedTouches[0].screenX;
-});
-
-document.addEventListener('touchend', e => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-});
+function setupTouchEvents() {
+    const sliderContainer = document.querySelector('.construction-slider');
+    if (!sliderContainer) return;
+    
+    sliderContainer.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+        stopAutoSlide(); // 터치 시 자동 슬라이드 일시정지
+    }, { passive: true });
+    
+    sliderContainer.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
+        handleSwipe();
+        startAutoSlide(); // 터치 후 자동 슬라이드 재시작
+    }, { passive: true });
+}
 
 function handleSwipe() {
     const swipeThreshold = 50;
-    const diff = touchStartX - touchEndX;
+    const diffX = touchStartX - touchEndX;
+    const diffY = touchStartY - touchEndY;
     
-    if (Math.abs(diff) > swipeThreshold) {
-        if (diff > 0) {
-            // 왼쪽으로 스와이프
-            if (totalSlides > 0) nextSlide();
+    // 수평 스와이프가 수직 스와이프보다 클 때만 처리
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > swipeThreshold) {
+        if (diffX > 0) {
+            // 왼쪽으로 스와이프 (다음 슬라이드)
+            if (totalSlides > 0) {
+                nextSlide();
+            }
         } else {
-            // 오른쪽으로 스와이프
-            if (totalSlides > 0) prevSlide();
+            // 오른쪽으로 스와이프 (이전 슬라이드)
+            if (totalSlides > 0) {
+                prevSlide();
+            }
         }
     }
 }
