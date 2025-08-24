@@ -165,18 +165,30 @@ function showDefaultSlides() {
     
     console.log('기본 슬라이드 HTML 생성 중...');
     sliderTrack.innerHTML = `
-        <div class="slide"><img src="static/images/gallery1.jpg" alt="시공현장 1"></div>
-        <div class="slide"><img src="static/images/gallery2.jpg" alt="시공현장 2"></div>
-        <div class="slide"><img src="static/images/gallery3.jpg" alt="시공현장 3"></div>
-        <div class="slide"><img src="static/images/gallery4.jpg" alt="시공현장 4"></div>
-        <div class="slide"><img src="static/images/gallery5.jpg" alt="시공현장 5"></div>
+        <div class="slide">
+            <img src="static/images/gallery1.jpg" alt="시공현장 1" onerror="this.src='static/images/hero-bg.jpg'">
+        </div>
+        <div class="slide">
+            <img src="static/images/gallery2.jpg" alt="시공현장 2" onerror="this.src='static/images/hero-bg.jpg'">
+        </div>
+        <div class="slide">
+            <img src="static/images/gallery3.jpg" alt="시공현장 3" onerror="this.src='static/images/hero-bg.jpg'">
+        </div>
+        <div class="slide">
+            <img src="static/images/gallery4.jpg" alt="시공현장 4" onerror="this.src='static/images/hero-bg.jpg'">
+        </div>
+        <div class="slide">
+            <img src="static/images/gallery5.jpg" alt="시공현장 5" onerror="this.src='static/images/hero-bg.jpg'">
+        </div>
     `;
     
+    // 슬라이더 초기화
     slides = document.querySelectorAll('.slide');
     totalSlides = slides.length;
     console.log(`기본 슬라이드 ${totalSlides}개 생성됨`);
     
     if (totalSlides > 0) {
+        currentSlide = 0;
         showSlide(0);
         startAutoSlide();
         setupSliderControls();
@@ -227,7 +239,7 @@ function startAutoSlide() {
         
         autoSlideInterval = setInterval(() => {
             nextSlide();
-        }, 5000);
+        }, 3000); // 3초마다 자동 전환
     }
 }
 
@@ -271,8 +283,10 @@ function setupSliderControls() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM 로드됨, 시공사진 로드 시작...');
     
-    // 즉시 기본 슬라이드 표시 (로딩 상태)
-    showDefaultSlides();
+    // 즉시 기본 슬라이드 표시
+    setTimeout(() => {
+        showDefaultSlides();
+    }, 100);
     
     // Supabase가 로드될 때까지 대기
     const checkSupabase = () => {

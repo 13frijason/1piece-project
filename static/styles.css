@@ -254,14 +254,24 @@ section {
 #construction-site {
     background: #2c3e50;
     color: white;
+    padding: 4rem 0;
+}
+
+#construction-site h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: white;
 }
 
 .construction-slider {
     margin-top: 3rem;
     position: relative;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* 슬라이더 초기 상태 개선 */
 .slider-container {
     display: flex;
     overflow: hidden;
@@ -269,6 +279,7 @@ section {
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     position: relative;
     min-height: 400px; /* 최소 높이 보장 */
+    background: #34495e; /* 배경색 추가 */
 }
 
 .slide {
@@ -404,26 +415,29 @@ section {
 
 .construction-more {
     text-align: center;
-    margin-top: 2rem;
+    margin-top: 3rem;
+    padding: 0 2rem;
 }
 
 .construction-more-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.8rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    gap: 1rem;
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
     color: white;
-    padding: 1.2rem 2.5rem;
+    padding: 1.5rem 3rem;
     text-decoration: none;
     border-radius: 50px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    font-weight: 700;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 30px rgba(231, 76, 60, 0.4);
     border: none;
     cursor: pointer;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     position: relative;
     overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .construction-more-btn::before {
@@ -433,8 +447,8 @@ section {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s ease;
 }
 
 .construction-more-btn:hover::before {
@@ -442,17 +456,28 @@ section {
 }
 
 .construction-more-btn:hover {
-    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(231, 76, 60, 0.6);
+}
+
+.construction-more-btn:active {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+}
+
+.construction-more-btn i:first-child {
+    font-size: 1.3rem;
+    color: #f39c12;
 }
 
 .construction-more-btn i:last-child {
     transition: transform 0.3s ease;
+    font-size: 1.1rem;
 }
 
 .construction-more-btn:hover i:last-child {
-    transform: translateX(5px);
+    transform: translateX(8px);
 }
 
 /* 회사소개 섹션 */
@@ -1204,8 +1229,15 @@ footer {
 
 /* 모바일 반응형 */
 @media (max-width: 768px) {
+    #construction-site h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+    
     .construction-slider {
         margin-top: 2rem;
+        margin-left: 1rem;
+        margin-right: 1rem;
     }
     
     .slide img {
@@ -1240,13 +1272,24 @@ footer {
         font-size: 0.9rem;
     }
     
+    .construction-more {
+        margin-top: 2rem;
+        padding: 0 1rem;
+    }
+    
     .construction-more-btn {
-        padding: 1rem 2rem;
-        font-size: 1rem;
+        padding: 1.2rem 2.5rem;
+        font-size: 1.1rem;
+        gap: 0.8rem;
     }
 }
 
 @media (max-width: 480px) {
+    #construction-site h2 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+    
     .slide img {
         height: 250px;
     }
@@ -1273,5 +1316,11 @@ footer {
     
     .slide-info p {
         font-size: 0.8rem;
+    }
+    
+    .construction-more-btn {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        gap: 0.6rem;
     }
 }
