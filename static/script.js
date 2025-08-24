@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
 let currentSlide = 0;
 let slides = [];
 let totalSlides = 0;
+let autoSlideInterval;
 
 // Supabase에서 시공사진 데이터 가져오기
 async function loadConstructionPhotos() {
@@ -98,174 +99,213 @@ async function loadConstructionPhotos() {
         
         if (error) {
             console.error('시공사진 로드 오류:', error);
-            console.log('오류로 인해 기본 슬라이드를 표시합니다.');
             showDefaultSlides();
             return;
         }
         
-        console.log('로드된 시공사진:', photos);
-        
         if (photos && photos.length > 0) {
-            console.log(`${photos.length}개의 시공사진을 슬라이더에 표시합니다.`);
+            console.log(`${photos.length}개의 시공사진을 찾았습니다.`);
             createSlidesFromData(photos);
         } else {
-            console.log('활성화된 시공사진이 없습니다. 기본 슬라이드를 표시합니다.');
+            console.log('등록된 시공사진이 없습니다. 기본 슬라이드를 표시합니다.');
             showDefaultSlides();
         }
         
     } catch (error) {
-        console.error('시공사진 로드 중 오류:', error);
-        console.log('예외 발생으로 기본 슬라이드를 표시합니다.');
+        console.error('시공사진 로드 중 예외 발생:', error);
         showDefaultSlides();
     }
 }
 
 // 데이터로부터 슬라이드 생성
 function createSlidesFromData(photos) {
-    const sliderTrack = document.getElementById('construction-slider-track');
-    if (!sliderTrack) return;
-    
-    // 기존 로딩 슬라이드 제거
-    sliderTrack.innerHTML = '';
-    
-    // 각 사진에 대해 슬라이드 생성
-    photos.forEach((photo, index) => {
-        const slide = document.createElement('div');
-        slide.className = 'slide';
-        slide.innerHTML = `
-            <img src="${photo.image_url}" alt="${photo.title}" loading="lazy">
-            <div class="slide-info">
-                <h4>${photo.title}</h4>
-                ${photo.description ? `<p>${photo.description}</p>` : ''}
-            </div>
-        `;
-        sliderTrack.appendChild(slide);
-    });
-    
-    // 슬라이더 초기화
-    slides = document.querySelectorAll('.slide');
-    totalSlides = slides.length;
-    
-    if (totalSlides > 0) {
-        showSlide(0);
-        startAutoSlide();
-        setupSliderControls();
-        setupTouchEvents(); // 터치 이벤트 설정 추가
-    }
-}
-
-// 기본 슬라이드 표시 (데이터가 없을 때)
-function showDefaultSlides() {
-    console.log('=== showDefaultSlides 함수 시작 ===');
+    console.log('데이터로부터 슬라이드 생성 중...');
     
     const sliderTrack = document.getElementById('construction-slider-track');
-    console.log('슬라이더 트랙 요소:', sliderTrack);
-    
     if (!sliderTrack) {
         console.error('슬라이더 트랙을 찾을 수 없습니다.');
         return;
     }
     
-    console.log('기본 슬라이드 HTML 생성 중...');
+    // 기존 슬라이드 제거
+    sliderTrack.innerHTML = '';
     
-    // 기본 이미지 경로 확인
+    // 새 슬라이드 생성
+    photos.forEach((photo, index) => {
+        const slide = document.createElement('div');
+        slide.className = 'slide';
+        
+        const img = document.createElement('img');
+        img.src = photo.image_url;
+        img.alt = photo.title || `시공현장 ${index + 1}`;
+        img.loading = 'lazy';
+        
+        // 이미지 로드 실패 시 기본 이미지로 대체
+        img.onerror = function() {
+            this.src = 'static/images/hero-bg.jpg';
+        };
+        
+        slide.appendChild(img);
+        
+        // 슬라이드 정보 추가
+        if (photo.title || photo.description) {
+            const slideInfo = document.createElement('div');
+            slideInfo.className = 'slide-info';
+            
+            if (photo.title) {
+                const title = document.createElement('h4');
+                title.textContent = photo.title;
+                slideInfo.appendChild(title);
+            }
+            
+            if (photo.description) {
+                const desc = document.createElement('p');
+                desc.textContent = photo.description;
+                slideInfo.appendChild(desc);
+            }
+            
+            slide.appendChild(slideInfo);
+        }
+        
+        sliderTrack.appendChild(slide);
+    });
+    
+    // 슬라이더 초기화
+    totalSlides = photos.length;
+    currentSlide = 0;
+    
+    if (totalSlides > 0) {
+        showSlide(0);
+        startAutoSlide();
+        setupSliderControls();
+        setupTouchEvents();
+        console.log('Supabase 데이터로 슬라이더 초기화 완료');
+    }
+}
+
+// 기본 슬라이드 표시
+function showDefaultSlides() {
+    console.log('=== showDefaultSlides 함수 시작 ===');
+    
+    const sliderTrack = document.getElementById('construction-slider-track');
+    if (!sliderTrack) {
+        console.error('슬라이더 트랙을 찾을 수 없습니다.');
+        return;
+    }
+    
+    console.log('기본 이미지 경로 설정 중...');
     const defaultImages = [
         'static/images/gallery1.jpg',
         'static/images/gallery2.jpg', 
         'static/images/gallery3.jpg',
-        'static/images/gallery4.jpg',
-        'static/images/gallery5.jpg'
+        'static/images/gallery4.jpg'
     ];
     
-    console.log('사용할 기본 이미지들:', defaultImages);
+    console.log('기본 이미지 경로:', defaultImages);
     
-    sliderTrack.innerHTML = `
-        <div class="slide">
-            <img src="${defaultImages[0]}" alt="시공현장 1" onerror="this.src='static/images/hero-bg.jpg'">
-        </div>
-        <div class="slide">
-            <img src="${defaultImages[1]}" alt="시공현장 2" onerror="this.src='static/images/hero-bg.jpg'">
-        </div>
-        <div class="slide">
-            <img src="${defaultImages[2]}" alt="시공현장 3" onerror="this.src='static/images/hero-bg.jpg'">
-        </div>
-        <div class="slide">
-            <img src="${defaultImages[3]}" alt="시공현장 4" onerror="this.src='static/images/hero-bg.jpg'">
-        </div>
-        <div class="slide">
-            <img src="${defaultImages[4]}" alt="시공현장 5" onerror="this.src='static/images/hero-bg.jpg'">
-        </div>
-    `;
+    // 기존 슬라이드 제거
+    sliderTrack.innerHTML = '';
+    console.log('기존 슬라이드 제거 완료');
     
-    console.log('HTML 생성 완료, 슬라이더 초기화 시작...');
+    // 기본 슬라이드 생성
+    defaultImages.forEach((imagePath, index) => {
+        console.log(`슬라이드 ${index + 1} 생성 중: ${imagePath}`);
+        
+        const slide = document.createElement('div');
+        slide.className = 'slide';
+        
+        const img = document.createElement('img');
+        img.src = imagePath;
+        img.alt = `시공현장 ${index + 1}`;
+        img.loading = 'lazy';
+        
+        // 이미지 로드 실패 시 기본 이미지로 대체
+        img.onerror = function() {
+            console.log(`이미지 로드 실패: ${imagePath}, 기본 이미지로 대체`);
+            this.src = 'static/images/hero-bg.jpg';
+        };
+        
+        slide.appendChild(img);
+        sliderTrack.appendChild(slide);
+        
+        console.log(`슬라이드 ${index + 1} 생성 완료`);
+    });
     
     // 슬라이더 초기화
-    slides = document.querySelectorAll('.slide');
-    totalSlides = slides.length;
-    console.log(`기본 슬라이드 ${totalSlides}개 생성됨:`, slides);
+    totalSlides = defaultImages.length;
+    currentSlide = 0;
+    
+    console.log(`총 슬라이드 수: ${totalSlides}`);
     
     if (totalSlides > 0) {
-        currentSlide = 0;
-        console.log('첫 번째 슬라이드 표시 중...');
+        currentSlide = 0; // 명시적으로 currentSlide 초기화
         showSlide(0);
-        console.log('자동 슬라이드 시작...');
         startAutoSlide();
-        console.log('슬라이더 컨트롤 설정...');
         setupSliderControls();
-        console.log('터치 이벤트 설정...');
         setupTouchEvents();
-        console.log('=== 기본 슬라이더 초기화 완료 ===');
+        console.log('기본 슬라이더 초기화 완료');
     } else {
         console.error('슬라이드가 생성되지 않았습니다.');
     }
 }
 
+// 특정 슬라이드 표시
 function showSlide(index) {
     console.log(`showSlide 호출: index=${index}, totalSlides=${totalSlides}`);
     
     if (totalSlides === 0) {
-        console.log('슬라이드가 없습니다.');
+        console.error('표시할 슬라이드가 없습니다.');
         return;
     }
     
-    if (index >= totalSlides) currentSlide = 0;
-    if (index < 0) currentSlide = totalSlides - 1;
+    if (index < 0 || index >= totalSlides) {
+        console.error(`잘못된 슬라이드 인덱스: ${index}`);
+        return;
+    }
     
-    console.log(`현재 슬라이드: ${currentSlide}`);
+    const sliderTrack = document.getElementById('construction-slider-track');
+    if (!sliderTrack) {
+        console.error('슬라이더 트랙을 찾을 수 없습니다.');
+        return;
+    }
     
-    slides.forEach((slide, i) => {
-        const translateX = 100 * (i - currentSlide);
-        slide.style.transform = `translateX(${translateX}%)`;
-        console.log(`슬라이드 ${i}: translateX(${translateX}%)`);
-    });
+    const slideWidth = sliderTrack.offsetWidth;
+    const translateX = -index * slideWidth;
+    
+    console.log(`슬라이드 ${index} 표시: translateX=${translateX}px`);
+    sliderTrack.style.transform = `translateX(${translateX}px)`;
+    currentSlide = index;
 }
 
+// 다음 슬라이드로 이동
 function nextSlide() {
-    currentSlide++;
-    showSlide(currentSlide);
+    if (totalSlides === 0) return;
+    
+    const nextIndex = (currentSlide + 1) % totalSlides;
+    showSlide(nextIndex);
 }
 
+// 이전 슬라이드로 이동
 function prevSlide() {
-    currentSlide--;
-    showSlide(currentSlide);
+    if (totalSlides === 0) return;
+    
+    const prevIndex = currentSlide === 0 ? totalSlides - 1 : currentSlide - 1;
+    showSlide(prevIndex);
 }
 
 // 자동 슬라이드 시작
-let autoSlideInterval;
-
 function startAutoSlide() {
     if (totalSlides > 1) {
-        // 기존 인터벌 제거
         if (autoSlideInterval) {
             clearInterval(autoSlideInterval);
         }
-        
         autoSlideInterval = setInterval(() => {
             nextSlide();
         }, 3000); // 3초마다 자동 전환
     }
 }
 
+// 자동 슬라이드 정지
 function stopAutoSlide() {
     if (autoSlideInterval) {
         clearInterval(autoSlideInterval);
@@ -277,61 +317,198 @@ function stopAutoSlide() {
 function setupSliderControls() {
     const prevBtn = document.querySelector('.prev-btn');
     const nextBtn = document.querySelector('.next-btn');
+    const sliderContainer = document.querySelector('.construction-slider');
     
-    if (prevBtn) {
+    if (prevBtn && nextBtn) {
         prevBtn.addEventListener('click', () => {
             stopAutoSlide();
             prevSlide();
-            startAutoSlide(); // 자동 슬라이드 재시작
+            startAutoSlide();
         });
-    }
-    
-    if (nextBtn) {
+        
         nextBtn.addEventListener('click', () => {
             stopAutoSlide();
             nextSlide();
-            startAutoSlide(); // 자동 슬라이드 재시작
+            startAutoSlide();
         });
     }
     
-    // 슬라이더에 마우스 호버 시 자동 슬라이드 일시정지
-    const sliderContainer = document.querySelector('.construction-slider');
     if (sliderContainer) {
         sliderContainer.addEventListener('mouseenter', stopAutoSlide);
         sliderContainer.addEventListener('mouseleave', startAutoSlide);
     }
 }
 
-// 페이지 로드 시 시공사진 로드
+// 터치 이벤트 설정
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+
+function setupTouchEvents() {
+    const sliderContainer = document.querySelector('.construction-slider');
+    if (!sliderContainer) return;
+    
+    sliderContainer.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+        stopAutoSlide();
+    }, { passive: true });
+    
+    sliderContainer.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
+        handleSwipe();
+        startAutoSlide();
+    }, { passive: true });
+}
+
+function handleSwipe() {
+    const diffX = touchStartX - touchEndX;
+    const diffY = touchStartY - touchEndY;
+    
+    // 수평 스와이프가 수직 스와이프보다 클 때만 처리
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > 50) {
+            // 왼쪽으로 스와이프 - 다음 슬라이드
+            nextSlide();
+        } else if (diffX < -50) {
+            // 오른쪽으로 스와이프 - 이전 슬라이드
+            prevSlide();
+        }
+    }
+}
+
+// DOM 로드 완료 시 슬라이더 초기화
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM 로드됨, 시공사진 로드 시작...');
+    showDefaultSlides(); // 즉시 기본 슬라이드 표시
     
-    // 즉시 기본 슬라이드 표시 (지연 없이)
-    showDefaultSlides();
-    
-    // Supabase가 로드될 때까지 대기
+    // Supabase 로드 확인
     const checkSupabase = () => {
         if (typeof window.supabase !== 'undefined') {
-            console.log('Supabase 로드됨, 시공사진 로드 시작');
             loadConstructionPhotos();
         } else {
-            console.log('Supabase 아직 로드되지 않음, 500ms 후 재시도...');
             setTimeout(checkSupabase, 500);
         }
     };
     
-    // 1초 후 Supabase 체크 시작 (안정성을 위해)
     setTimeout(checkSupabase, 1000);
 });
 
-// 페이지가 완전히 로드된 후에도 한 번 더 시도
+// 페이지 완전 로드 후 슬라이더 상태 확인
 window.addEventListener('load', function() {
     console.log('페이지 완전 로드됨, 슬라이더 상태 확인...');
-    
-    // 슬라이더가 제대로 초기화되지 않았다면 다시 시도
     if (totalSlides === 0) {
         console.log('슬라이더가 초기화되지 않음, 다시 시도...');
         showDefaultSlides();
+    }
+});
+
+// 견적 계산기 모달
+document.addEventListener('DOMContentLoaded', function() {
+    const calculatorModal = document.getElementById('calculator-modal');
+    const calculatorBtn = document.querySelector('.calculator-btn');
+    const closeModal = document.querySelector('.close-modal');
+    
+    if (calculatorBtn) {
+        calculatorBtn.addEventListener('click', () => {
+            if (calculatorModal) {
+                calculatorModal.style.display = 'block';
+            }
+        });
+    }
+    
+    if (closeModal) {
+        closeModal.addEventListener('click', () => {
+            if (calculatorModal) {
+                calculatorModal.style.display = 'none';
+            }
+        });
+    }
+    
+    // 모달 외부 클릭 시 닫기
+    window.addEventListener('click', (e) => {
+        if (e.target === calculatorModal) {
+            calculatorModal.style.display = 'none';
+        }
+    });
+    
+    // 견적 계산 폼 제출
+    const calculatorForm = document.getElementById('calculator-form');
+    if (calculatorForm) {
+        calculatorForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const productType = document.getElementById('product-type').value;
+            const manufacturer = document.getElementById('manufacturer').value;
+            const area = parseInt(document.getElementById('area').value);
+            
+            if (!productType || !manufacturer || !area) {
+                alert('모든 필드를 입력해주세요.');
+                return;
+            }
+            
+            // 간단한 견적 계산 (실제로는 더 복잡한 계산 필요)
+            let basePrice = 0;
+            switch (productType) {
+                case 'system':
+                    basePrice = 1500000; // 150만원
+                    break;
+                case 'ceiling':
+                    basePrice = 800000;  // 80만원
+                    break;
+                case 'stand':
+                    basePrice = 500000;  // 50만원
+                    break;
+            }
+            
+            // 평수에 따른 가격 조정
+            let areaMultiplier = 1;
+            if (area <= 20) areaMultiplier = 0.8;
+            else if (area <= 40) areaMultiplier = 1.0;
+            else if (area <= 60) areaMultiplier = 1.2;
+            else areaMultiplier = 1.5;
+            
+            const estimatedPrice = Math.round(basePrice * areaMultiplier);
+            
+            // 결과 표시
+            const resultDiv = document.getElementById('calculation-result');
+            if (resultDiv) {
+                resultDiv.innerHTML = `
+                    <h3>견적 결과</h3>
+                    <p><strong>제품:</strong> ${productType === 'system' ? '시스템에어컨' : productType === 'ceiling' ? '천장형에어컨' : '스탠드형에어컨'}</p>
+                    <p><strong>제조사:</strong> ${manufacturer.toUpperCase()}</p>
+                    <p><strong>평수:</strong> ${area}평</p>
+                    <p><strong>예상 견적:</strong> ${estimatedPrice.toLocaleString()}원</p>
+                    <p class="note">* 이는 예상 견적이며, 정확한 견적은 현장 방문 후 결정됩니다.</p>
+                `;
+            }
+        });
+    }
+});
+
+// 견적 문의 폼 제출
+document.addEventListener('DOMContentLoaded', function() {
+    const quoteForm = document.getElementById('quote-form');
+    if (quoteForm) {
+        quoteForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 폼 데이터 수집
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // 간단한 유효성 검사
+            if (!data['customer-name'] || !data['customer-phone'] || !data['service-type'] || !data['detailed-request']) {
+                alert('모든 필드를 입력해주세요.');
+                return;
+            }
+            
+            // 성공 메시지 (실제로는 서버로 전송)
+            alert('견적 문의가 성공적으로 전송되었습니다. 빠른 시일 내에 연락드리겠습니다.');
+            this.reset();
+        });
     }
 });
 
@@ -349,51 +526,6 @@ const imageObserver = new IntersectionObserver((entries, observer) => {
 });
 
 images.forEach(img => imageObserver.observe(img));
-
-// 터치 이벤트 최적화
-let touchStartX = 0;
-let touchStartY = 0;
-let touchEndX = 0;
-let touchEndY = 0;
-
-function setupTouchEvents() {
-    const sliderContainer = document.querySelector('.construction-slider');
-    if (!sliderContainer) return;
-    
-    sliderContainer.addEventListener('touchstart', e => {
-        touchStartX = e.changedTouches[0].screenX;
-        touchStartY = e.changedTouches[0].screenY;
-        stopAutoSlide(); // 터치 시 자동 슬라이드 일시정지
-    }, { passive: true });
-    
-    sliderContainer.addEventListener('touchend', e => {
-        touchEndX = e.changedTouches[0].screenX;
-        touchEndY = e.changedTouches[0].screenY;
-        handleSwipe();
-        startAutoSlide(); // 터치 후 자동 슬라이드 재시작
-    }, { passive: true });
-}
-
-function handleSwipe() {
-    const swipeThreshold = 50;
-    const diffX = touchStartX - touchEndX;
-    const diffY = touchStartY - touchEndY;
-    
-    // 수평 스와이프가 수직 스와이프보다 클 때만 처리
-    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > swipeThreshold) {
-        if (diffX > 0) {
-            // 왼쪽으로 스와이프 (다음 슬라이드)
-            if (totalSlides > 0) {
-                nextSlide();
-            }
-        } else {
-            // 오른쪽으로 스와이프 (이전 슬라이드)
-            if (totalSlides > 0) {
-                prevSlide();
-            }
-        }
-    }
-}
 
 // 모바일 최적화
 function handleMobileOptimization() {
