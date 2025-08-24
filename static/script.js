@@ -277,7 +277,7 @@ function showSlide(index) {
     currentSlide = index;
 }
 
-// 다음 슬라이드로 이동
+// 다음 슬라이드로 이동 (한 방향으로만 순환)
 function nextSlide() {
     if (totalSlides === 0) return;
     
@@ -285,11 +285,11 @@ function nextSlide() {
     showSlide(nextIndex);
 }
 
-// 이전 슬라이드로 이동
+// 이전 슬라이드로 이동 (한 방향으로만 순환)
 function prevSlide() {
     if (totalSlides === 0) return;
     
-    const prevIndex = currentSlide === 0 ? totalSlides - 1 : currentSlide - 1;
+    const prevIndex = (currentSlide - 1 + totalSlides) % totalSlides;
     showSlide(prevIndex);
 }
 
