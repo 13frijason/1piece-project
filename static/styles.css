@@ -261,12 +261,14 @@ section {
     position: relative;
 }
 
+/* 슬라이더 초기 상태 개선 */
 .slider-container {
     display: flex;
     overflow: hidden;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     position: relative;
+    min-height: 400px; /* 최소 높이 보장 */
 }
 
 .slide {
@@ -274,6 +276,7 @@ section {
     position: relative;
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
+    flex-shrink: 0; /* 슬라이드가 줄어들지 않도록 */
 }
 
 .slide img {
@@ -281,6 +284,7 @@ section {
     height: 400px;
     object-fit: cover;
     transition: transform 0.3s ease;
+    display: block; /* 이미지 간격 제거 */
 }
 
 .slide:hover img {

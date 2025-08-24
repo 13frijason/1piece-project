@@ -75,17 +75,20 @@ async function loadConstructionPhotos() {
         
         // Supabase 클라이언트 확인
         if (typeof window.supabase === 'undefined') {
-            console.error('Supabase가 로드되지 않았습니다.');
+            console.error('Supabase가 로드되지 않았습니다. 기본 슬라이드를 표시합니다.');
             showDefaultSlides();
             return;
         }
         
+        console.log('Supabase 클라이언트 생성 중...');
         // Supabase 클라이언트 생성
         const supabaseUrl = 'https://jykkpfrpnpkycqyokqnm.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5a2twZnJwbnBreWNxeW9rcW5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3MTY1NjgsImV4cCI6MjA2ODI5MjU2OH0.vMXLe-ccOQXuH2I6M-9WIYJcxoCMQygh5ldBGdd3jzk';
         
         const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+        console.log('Supabase 클라이언트 생성 완료');
         
+        console.log('데이터베이스에서 시공사진 조회 중...');
         const { data: photos, error } = await supabaseClient
             .from('construction_photos')
             .select('*')
@@ -95,6 +98,7 @@ async function loadConstructionPhotos() {
         
         if (error) {
             console.error('시공사진 로드 오류:', error);
+            console.log('오류로 인해 기본 슬라이드를 표시합니다.');
             showDefaultSlides();
             return;
         }
@@ -102,6 +106,7 @@ async function loadConstructionPhotos() {
         console.log('로드된 시공사진:', photos);
         
         if (photos && photos.length > 0) {
+            console.log(`${photos.length}개의 시공사진을 슬라이더에 표시합니다.`);
             createSlidesFromData(photos);
         } else {
             console.log('활성화된 시공사진이 없습니다. 기본 슬라이드를 표시합니다.');
@@ -110,6 +115,7 @@ async function loadConstructionPhotos() {
         
     } catch (error) {
         console.error('시공사진 로드 중 오류:', error);
+        console.log('예외 발생으로 기본 슬라이드를 표시합니다.');
         showDefaultSlides();
     }
 }
@@ -150,9 +156,14 @@ function createSlidesFromData(photos) {
 
 // 기본 슬라이드 표시 (데이터가 없을 때)
 function showDefaultSlides() {
+    console.log('기본 슬라이드 표시 시작');
     const sliderTrack = document.getElementById('construction-slider-track');
-    if (!sliderTrack) return;
+    if (!sliderTrack) {
+        console.error('슬라이더 트랙을 찾을 수 없습니다.');
+        return;
+    }
     
+    console.log('기본 슬라이드 HTML 생성 중...');
     sliderTrack.innerHTML = `
         <div class="slide"><img src="static/images/gallery1.jpg" alt="시공현장 1"></div>
         <div class="slide"><img src="static/images/gallery2.jpg" alt="시공현장 2"></div>
@@ -163,23 +174,34 @@ function showDefaultSlides() {
     
     slides = document.querySelectorAll('.slide');
     totalSlides = slides.length;
+    console.log(`기본 슬라이드 ${totalSlides}개 생성됨`);
     
     if (totalSlides > 0) {
         showSlide(0);
         startAutoSlide();
         setupSliderControls();
-        setupTouchEvents(); // 터치 이벤트 설정 추가
+        setupTouchEvents();
+        console.log('기본 슬라이더 초기화 완료');
     }
 }
 
 function showSlide(index) {
-    if (totalSlides === 0) return;
+    console.log(`showSlide 호출: index=${index}, totalSlides=${totalSlides}`);
+    
+    if (totalSlides === 0) {
+        console.log('슬라이드가 없습니다.');
+        return;
+    }
     
     if (index >= totalSlides) currentSlide = 0;
     if (index < 0) currentSlide = totalSlides - 1;
     
+    console.log(`현재 슬라이드: ${currentSlide}`);
+    
     slides.forEach((slide, i) => {
-        slide.style.transform = `translateX(${100 * (i - currentSlide)}%)`;
+        const translateX = 100 * (i - currentSlide);
+        slide.style.transform = `translateX(${translateX}%)`;
+        console.log(`슬라이드 ${i}: translateX(${translateX}%)`);
     });
 }
 
@@ -249,6 +271,9 @@ function setupSliderControls() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM 로드됨, 시공사진 로드 시작...');
     
+    // 즉시 기본 슬라이드 표시 (로딩 상태)
+    showDefaultSlides();
+    
     // Supabase가 로드될 때까지 대기
     const checkSupabase = () => {
         if (typeof window.supabase !== 'undefined') {
@@ -260,8 +285,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
     
-    // 즉시 체크 시작
-    checkSupabase();
+    // 1초 후 Supabase 체크 시작 (안정성을 위해)
+    setTimeout(checkSupabase, 1000);
 });
 
 // 이미지 지연 로딩
