@@ -156,44 +156,67 @@ function createSlidesFromData(photos) {
 
 // 기본 슬라이드 표시 (데이터가 없을 때)
 function showDefaultSlides() {
-    console.log('기본 슬라이드 표시 시작');
+    console.log('=== showDefaultSlides 함수 시작 ===');
+    
     const sliderTrack = document.getElementById('construction-slider-track');
+    console.log('슬라이더 트랙 요소:', sliderTrack);
+    
     if (!sliderTrack) {
         console.error('슬라이더 트랙을 찾을 수 없습니다.');
         return;
     }
     
     console.log('기본 슬라이드 HTML 생성 중...');
+    
+    // 기본 이미지 경로 확인
+    const defaultImages = [
+        'static/images/gallery1.jpg',
+        'static/images/gallery2.jpg', 
+        'static/images/gallery3.jpg',
+        'static/images/gallery4.jpg',
+        'static/images/gallery5.jpg'
+    ];
+    
+    console.log('사용할 기본 이미지들:', defaultImages);
+    
     sliderTrack.innerHTML = `
         <div class="slide">
-            <img src="static/images/gallery1.jpg" alt="시공현장 1" onerror="this.src='static/images/hero-bg.jpg'">
+            <img src="${defaultImages[0]}" alt="시공현장 1" onerror="this.src='static/images/hero-bg.jpg'">
         </div>
         <div class="slide">
-            <img src="static/images/gallery2.jpg" alt="시공현장 2" onerror="this.src='static/images/hero-bg.jpg'">
+            <img src="${defaultImages[1]}" alt="시공현장 2" onerror="this.src='static/images/hero-bg.jpg'">
         </div>
         <div class="slide">
-            <img src="static/images/gallery3.jpg" alt="시공현장 3" onerror="this.src='static/images/hero-bg.jpg'">
+            <img src="${defaultImages[2]}" alt="시공현장 3" onerror="this.src='static/images/hero-bg.jpg'">
         </div>
         <div class="slide">
-            <img src="static/images/gallery4.jpg" alt="시공현장 4" onerror="this.src='static/images/hero-bg.jpg'">
+            <img src="${defaultImages[3]}" alt="시공현장 4" onerror="this.src='static/images/hero-bg.jpg'">
         </div>
         <div class="slide">
-            <img src="static/images/gallery5.jpg" alt="시공현장 5" onerror="this.src='static/images/hero-bg.jpg'">
+            <img src="${defaultImages[4]}" alt="시공현장 5" onerror="this.src='static/images/hero-bg.jpg'">
         </div>
     `;
+    
+    console.log('HTML 생성 완료, 슬라이더 초기화 시작...');
     
     // 슬라이더 초기화
     slides = document.querySelectorAll('.slide');
     totalSlides = slides.length;
-    console.log(`기본 슬라이드 ${totalSlides}개 생성됨`);
+    console.log(`기본 슬라이드 ${totalSlides}개 생성됨:`, slides);
     
     if (totalSlides > 0) {
         currentSlide = 0;
+        console.log('첫 번째 슬라이드 표시 중...');
         showSlide(0);
+        console.log('자동 슬라이드 시작...');
         startAutoSlide();
+        console.log('슬라이더 컨트롤 설정...');
         setupSliderControls();
+        console.log('터치 이벤트 설정...');
         setupTouchEvents();
-        console.log('기본 슬라이더 초기화 완료');
+        console.log('=== 기본 슬라이더 초기화 완료 ===');
+    } else {
+        console.error('슬라이드가 생성되지 않았습니다.');
     }
 }
 
@@ -283,10 +306,8 @@ function setupSliderControls() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM 로드됨, 시공사진 로드 시작...');
     
-    // 즉시 기본 슬라이드 표시
-    setTimeout(() => {
-        showDefaultSlides();
-    }, 100);
+    // 즉시 기본 슬라이드 표시 (지연 없이)
+    showDefaultSlides();
     
     // Supabase가 로드될 때까지 대기
     const checkSupabase = () => {
@@ -301,6 +322,17 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 1초 후 Supabase 체크 시작 (안정성을 위해)
     setTimeout(checkSupabase, 1000);
+});
+
+// 페이지가 완전히 로드된 후에도 한 번 더 시도
+window.addEventListener('load', function() {
+    console.log('페이지 완전 로드됨, 슬라이더 상태 확인...');
+    
+    // 슬라이더가 제대로 초기화되지 않았다면 다시 시도
+    if (totalSlides === 0) {
+        console.log('슬라이더가 초기화되지 않음, 다시 시도...');
+        showDefaultSlides();
+    }
 });
 
 // 이미지 지연 로딩

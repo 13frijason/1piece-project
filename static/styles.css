@@ -420,24 +420,24 @@ section {
 }
 
 .construction-more-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 1rem;
-    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-    color: white;
-    padding: 1.5rem 3rem;
-    text-decoration: none;
-    border-radius: 50px;
-    font-weight: 700;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 10px 30px rgba(231, 76, 60, 0.4);
-    border: none;
-    cursor: pointer;
-    font-size: 1.2rem;
-    position: relative;
-    overflow: hidden;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%) !important;
+    color: white !important;
+    padding: 1.5rem 3rem !important;
+    text-decoration: none !important;
+    border-radius: 50px !important;
+    font-weight: 700 !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 10px 30px rgba(231, 76, 60, 0.4) !important;
+    border: none !important;
+    cursor: pointer !important;
+    font-size: 1.2rem !important;
+    position: relative !important;
+    overflow: hidden !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
 }
 
 .construction-more-btn::before {
